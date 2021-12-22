@@ -14,7 +14,7 @@ export default function Button({
 }: Props) {
 	return (
 		<button
-			className="px-4 w-36 py-2 rounded-full font-medium tracking-wide shadow-md shadow-orange-200 bg-orange-400 hover:bg-orange-500 text-white transition-colors duration-200 select-none"
+			className="px-4 w-36 py-2 rounded-full font-semibold tracking-wide bg-black hover:bg-white text-white hover:text-black border-2 border-black transition-colors duration-200 select-none"
 			onClick={onClick}
 			{...props}>
 			{children}

@@ -3,19 +3,11 @@ import Image from 'next/image';
 
 export default function Identity() {
 	return (
-		<div className="flex-1">
-			<div className="flex">
-				<Link href="/" passHref>
-					<div className="flex items-center gap-4 cursor-pointer">
-						{/* <div className="rounded-full border border-background-tertiary overflow-hidden h-[40px] w-[40px]">
-              <Image src="/profile-picture.png" alt="" width={40} height={40}/>
-            </div> */}
-						<p className="text-[1.35rem] font-bold text-black">
-							Lyrics Against Humanity
-						</p>
-					</div>
-				</Link>
-			</div>
-		</div>
+		<Link href="/" passHref>
+			<p className="font-bold text-2xl rounded-xl border-4 border-black flex">
+				<div className="px-2">Draw</div>
+				<div className="bg-black px-2 text-white">.ink</div>
+			</p>
+		</Link>
 	);
 }

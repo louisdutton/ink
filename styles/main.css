@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-	@apply transition-colors duration-200 bg-orange-50 text-neutral-800;
+	@apply transition-colors duration-200 bg-white text-black;
 }
 
 .content-area {

@@ -13,12 +13,10 @@ const Home: NextPage = () => {
 			</Head>
 			<div className="h-screen flex justify-center items-center">
 				<div className="p-10 flex flex-col gap-4">
-					<h1 className="font-bold text-6xl text-neutral-800">
-						Welcome to
-						<br />
-						<span className="text-orange-400">Lyrics Against Humanity</span>
+					<h1 className="font-bold text-8xl py-2 rounded-xl border-4 border-black overflow-hidden">
+						<span className="px-5">draw</span>
+						<span className="bg-black px-5 h-full text-white">.ink</span>
 					</h1>
-					<hr className="border-orange-400 border-1 w-full" />
 					<Input label="username" />
 					<div className="mt-20 w-full flex justify-center">
 						<Link href="/game" passHref>
