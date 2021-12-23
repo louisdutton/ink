@@ -7,7 +7,7 @@ export default function Footer() {
 				<p className="text-text-secondary text-xs">
 					Copyright © {year}{' '}
 					<a
-						href="https://louisdutton.com"
+						href="https://github.com/louisdutton"
 						className="underline"
 						target="_blank"
 						rel="noreferrer">
