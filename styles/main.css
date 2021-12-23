@@ -15,5 +15,5 @@ body {
 }
 
 ::selection {
-	@apply bg-orange-200;
+	@apply bg-blue-300 border;
 }

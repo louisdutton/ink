@@ -7,11 +7,11 @@ export default function Footer() {
 				<p className="text-text-secondary text-xs">
 					Copyright © {year}{' '}
 					<a
-						href="https://github.com/Lyrics-Against-Humanity"
+						href="https://louisdutton.com"
 						className="underline"
 						target="_blank"
 						rel="noreferrer">
-						draw.ink
+						Louis Dutton
 					</a>
 					. All rights reserved.
 				</p>

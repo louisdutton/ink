@@ -1,13 +1,13 @@
 import Link from 'next/link';
-import Image from 'next/image';
+import { Drop } from 'phosphor-react';
 
 export default function Identity() {
 	return (
 		<Link href="/" passHref>
-			<p className="font-bold text-2xl rounded-xl border-4 border-black flex">
-				<div className="px-2">Draw</div>
-				<div className="bg-black px-2 text-white">.ink</div>
-			</p>
+			<div className="flex items-center gap-2 cursor-pointer">
+				<Drop size={24} weight="fill" />
+				<p className="font-bold text-xl rounded-lg border-black">draw.ink</p>
+			</div>
 		</Link>
 	);
 }

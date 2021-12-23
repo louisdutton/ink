@@ -4,30 +4,141 @@ import Button from '../components/Button';
 import Card from '../components/Card';
 import Link from 'next/link';
 import Identity from '../components/Identity';
+import List from '../components/List';
+import { User, UserCircle } from 'phosphor-react';
+import Input from '../components/Input';
+import { getAuth, signInAnonymously } from 'firebase/auth';
+import { firebase, auth } from '../lib/firebase';
 
-const Game: NextPage = () => {
+type User = {
+	name: string;
+	img: string | undefined;
+	position: number;
+};
+
+type Message = {
+	author: User;
+	content: string;
+};
+
+const USERS: User[] = [
+	{ name: 'Dr. Tim', img: undefined, position: 0 },
+	{ name: 'Hex', img: undefined, position: 1 },
+	{ name: 'Louis', img: undefined, position: 2 },
+	{ name: 'Fuzzy', img: undefined, position: 3 }
+];
+
+const MESSAGES: Message[] = [
+	{ author: USERS[0], content: 'hey guys!' },
+	{ author: USERS[3], content: 'sup doc' },
+	{ author: USERS[2], content: 'hi everyone' },
+	{ author: USERS[3], content: 'chicken salad' },
+	{ author: USERS[1], content: 'fish cakes' },
+	{ author: USERS[2], content: 'dead wasps' },
+	{ author: USERS[1], content: 'lonely cats' },
+	{ author: USERS[0], content: 'careful spiders' },
+	{ author: USERS[2], content: 'terrible toes' },
+	{ author: USERS[3], content: 'smelly smeagle' },
+	{ author: USERS[2], content: 'lucius malfoy' },
+	{ author: USERS[2], content: 'oranges' },
+	{ author: USERS[3], content: 'go away' },
+	{ author: USERS[0], content: 'come back' },
+	{ author: USERS[2], content: 'cheese puffs' },
+	{ author: USERS[2], content: 'whoah dude' },
+	{ author: USERS[3], content: 'holy cow' },
+	{ author: USERS[3], content: 'wowcher' },
+	{ author: USERS[2], content: 'yikes' },
+	{ author: USERS[2], content: 'watch your step' },
+	{ author: USERS[0], content: 'I do not have feet' },
+	{ author: USERS[1], content: 'yes you do' },
+	{ author: USERS[2], content: 'really?' },
+	{ author: USERS[0], content: 'interesting...' }
+];
+
+export default function Game() {
 	const [text, setText] = useState(['']);
 	const [notation, setNotation] = useState('');
 	const [index, setIndex] = useState(0);
 
 	return (
-		<div className="w-full">
-			<div className="flex absolute top-4 left-4">
-				<Link href="/" passHref>
-					<p className="font-medium text-xl rounded-lg border-2 border-black flex cursor-pointer">
-						<div className="pl-2 pr-1">draw</div>
-						<div className="bg-black px-2 text-white">.ink</div>
-					</p>
-				</Link>
+		<div className="w-screen h-screen flex py-20 overflow-hidden">
+			<List<User>
+				items={USERS}
+				render={(user: User) => <UserPlate user={user} />}
+			/>
+			<Card className="flex flex-col items-center flex-1 !border-2">
+				<canvas></canvas>
+			</Card>
+			<div className="flex flex-col items-center">
+				<div className="p-4 w-full rounded overflow-y-scroll h-full">
+					<List<Message>
+						items={MESSAGES}
+						render={(msg: Message, i: number | undefined) => (
+							<MessageItem msg={msg} index={i as number} />
+						)}
+						className="justify-end flex flex-col h-full"
+					/>
+				</div>
+				{/* <form onSubmit={(e) => MESSAGES.push(e.target.value)}> */}
+				<input
+					id="message"
+					type="text"
+					placeholder="Enter message"
+					className="px-4 py-2 mx-2 outline-none transition-colors group border-2 rounded
+                  placeholder:text-neutral-400
+                  hover:border-black
+                  focus:border-neutral-800 focus:bg-neutral-100"
+				/>
+				{/* </form> */}
+				{/* <Button onClick={() => console.log('pressed')}>Generate</Button> */}
 			</div>
-			<div className="h-screen flex flex-col justify-center items-center gap-8 px-4">
-				<Card className="p-5 max-w-2xl w-full flex flex-col items-center">
-					<canvas></canvas>
-				</Card>
-				<Button onClick={() => console.log('pressed')}>Generate</Button>
+			<div className="top-4 left-4 absolute">
+				<Identity />
 			</div>
 		</div>
 	);
+}
+
+type UserPlateProps = {
+	user: User;
 };
 
-export default Game;
+function UserPlate({ user }: UserPlateProps) {
+	return (
+		<div className="flex gap-4 items-center border-b px-5 py-2">
+			<p className="w-4 font-bold">{user.position + 1}.</p>
+			<div className="rounded-full h-10 w-10 flex items-center justify-center">
+				<UserCircle size={40} />
+			</div>
+			<p className="font-bold">{user.name}</p>
+		</div>
+	);
+}
+
+type MessageItemProps = {
+	msg: Message;
+	index: number;
+};
+
+function MessageItem({ msg, index }: MessageItemProps) {
+	console.log(index);
+
+	return (
+		<div className="flex gap-2" style={{ opacity: 0.1 * (index + 1) }}>
+			{msg.author && <div className="font-bold">{msg.author.name}</div>}
+			<div className="text-neutral-500">{msg.content}</div>
+		</div>
+	);
+}
+
+// export async function getServerSideProps() {
+// 	const posts = await getDocs(messages);
+// 	console.log(posts);
+
+// 	return {
+// 		props: {
+// 			posts
+// 		},
+// 		fallback: false
+// 	};
+// }

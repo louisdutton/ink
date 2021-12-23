@@ -12,7 +12,7 @@ export default function Layout({ children }: Props) {
 		<>
 			<CoreMeta />
 			{/* <Header /> */}
-			<main className="main-area flex justify-center">{children}</main>
+			<main className="flex justify-center">{children}</main>
 			<Footer />
 		</>
 	);
