@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Button from '../components/Button';
 import Card from '../components/Card';
 import Link from 'next/link';
@@ -9,6 +9,7 @@ import { User, UserCircle } from 'phosphor-react';
 import Input from '../components/Input';
 import { getAuth, signInAnonymously } from 'firebase/auth';
 import { firebase, auth } from '../lib/firebase';
+import { initInk } from '../lib/ink';
 
 type User = {
 	name: string;
@@ -66,8 +67,16 @@ export default function Game() {
 				items={USERS}
 				render={(user: User) => <UserPlate user={user} />}
 			/>
-			<Card className="flex flex-col items-center flex-1 !border-2">
-				<canvas></canvas>
+			<Card className="flex flex-col items-center flex-1 !border-2 relative">
+				<Canvas />
+				{/* <p className="absolute font-bold text-2xl top-2 flex gap-1 pointer-events-none">
+					<span className="underline">B</span>
+					<span className="underline">a</span>
+					<span className="underline">n</span>
+					<span className="underline">a</span>
+					<span className="underline">n</span>
+					<span className="underline">a</span>
+				</p> */}
 			</Card>
 			<div className="flex flex-col items-center">
 				<div className="p-4 w-full rounded overflow-y-scroll h-full">
@@ -142,3 +151,17 @@ function MessageItem({ msg, index }: MessageItemProps) {
 // 		fallback: false
 // 	};
 // }
+function Canvas() {
+	const ref = useRef<HTMLCanvasElement>(null);
+
+	useEffect(() => {
+		if (ref.current)
+			initInk(
+				ref.current,
+				ref.current.parentElement!.clientWidth,
+				ref.current.parentElement!.clientHeight
+			);
+	});
+
+	return <canvas ref={ref} />;
+}
