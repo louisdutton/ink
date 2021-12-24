@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react';
+import { setUncaughtExceptionCaptureCallback } from 'process';
+import { useEffect, useRef, useState } from 'react';
 import Palette from '../components/Palette';
 import Toolbar from '../components/Toolbar';
 
@@ -9,12 +10,15 @@ const dimensions = {
 
 export default function Canvas() {
 	const ref = useRef<HTMLCanvasElement>(null);
+	const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
 
 	useEffect(() => {
 		if (!ref.current) return;
 
 		const canvas = ref.current;
 		const ctx = canvas.getContext('2d')!;
+		setCtx(ctx); // async
+
 		canvas.style.height = dimensions.height + 'px';
 		canvas.style.width = dimensions.width + 'px';
 		const rect = canvas.getBoundingClientRect(); // must be after style changes
@@ -45,10 +49,9 @@ export default function Canvas() {
 		let prevY: number;
 		let draw = false;
 
-		window.addEventListener('pointerdown', (e) => (draw = true));
-		window.addEventListener('pointerup', (e) => (draw = false));
-
-		canvas.addEventListener('pointermove', (e) => {
+		const handlePointerDown = (e: PointerEvent) => (draw = true);
+		const handlePointerUp = (e: PointerEvent) => (draw = false);
+		const handlePointerMove = (e: PointerEvent) => {
 			const x = e.clientX - rect.left;
 			const y = e.clientY - rect.top;
 
@@ -69,14 +72,30 @@ export default function Canvas() {
 
 			prevX = currentX;
 			prevY = currentY;
-		});
-	});
+		};
+
+		// subscribe
+		canvas.addEventListener('pointerdown', handlePointerDown);
+		window.addEventListener('pointerup', handlePointerUp);
+		canvas.addEventListener('pointermove', handlePointerMove);
+
+		// unsubscribe
+		return () => {
+			canvas.removeEventListener('pointerdown', handlePointerDown);
+			window.removeEventListener('pointerup', handlePointerUp);
+			canvas.removeEventListener('pointermove', handlePointerMove);
+		};
+	}, []);
+
+	const setColor = (color: string) => {
+		if (ctx) ctx.strokeStyle = color;
+	};
 
 	return (
 		<div className="flex flex-col">
 			<canvas ref={ref} className="border-2 rounded-t-xl border-b-0" />
 			<div className="border-2 rounded-b-xl py-2 px-3 flex gap-4 items-center justify-between">
-				<Palette />
+				<Palette setColor={setColor} />
 				<Toolbar />
 			</div>
 		</div>

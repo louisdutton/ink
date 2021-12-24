@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const COLORS = [
+const TAILWIND_COLORS = [
 	'bg-black',
 	'bg-red-500',
 	'bg-orange-500',
@@ -12,20 +12,49 @@ const COLORS = [
 	'bg-white'
 ];
 
-export default function Palette() {
-	const [active, setActive] = useState<string>(COLORS[0]);
-	const handleClick = () => {
-		console.log();
+const COLORS = [
+	'#000000',
+	'#ef4444',
+	'#f97316',
+	'#eab308',
+	'#22c55e',
+	'#3b82f6',
+	'#a855f7',
+	'#ec4899',
+	'#ffffff'
+];
+
+export enum Color {
+	black,
+	red,
+	orange,
+	yellow,
+	green,
+	blue,
+	purple,
+	pink,
+	white
+}
+
+type Props = {
+	setColor: (color: string) => void;
+};
+
+export default function Palette({ setColor }: Props) {
+	const [active, setActive] = useState<number>(0);
+	const handleClick = (index: number) => {
+		setActive(index);
+		setColor(COLORS[index]);
 	};
 
 	return (
 		<ul className="flex gap-1">
-			{COLORS.map((color) => (
-				<li>
+			{TAILWIND_COLORS.map((color, i) => (
+				<li key={color}>
 					<ColorButton
 						color={color}
-						onClick={() => setActive(color)}
-						active={color === active}
+						onClick={() => handleClick(i)}
+						active={i === active}
 					/>
 				</li>
 			))}
