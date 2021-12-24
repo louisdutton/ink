@@ -1,23 +1,21 @@
 import Head from 'next/head';
 
 // Data
-const baseURL = 'https://lyrics-against-humanity.github.io/';
-const baseTitle = 'Lyrics Against Humanity';
+const baseURL = 'https://draw.ink/';
+const baseTitle = 'draw.ink';
 const twitterHandle = undefined;
 const baseImage = '/og_image.jpg';
 
 /** General metadata included in every page. */
 export function CoreMeta() {
 	return (
-		<>
-			<Head>
-				<meta name="viewport" content="width=device-width,initial-scale=1" />
-				<meta property="og:site_name" content={baseTitle} />
-				<meta name="twitter:site" content={twitterHandle} />
-				<meta name="twitter:creator" content={twitterHandle} />
-				<link rel="icon" href="/favicon.ico" />
-			</Head>
-		</>
+		<Head>
+			<meta name="viewport" content="width=device-width,initial-scale=1" />
+			<meta property="og:site_name" content={baseTitle} />
+			<meta name="twitter:site" content={twitterHandle} />
+			<meta name="twitter:creator" content={twitterHandle} />
+			<link rel="icon" href="/favicon.ico" />
+		</Head>
 	);
 }
 

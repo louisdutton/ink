@@ -10,11 +10,9 @@ export default function Header() {
 	const [open, setOpen] = useState(false);
 
 	return (
-		<header className="z-50 sticky top-0 flex justify-center w-screen h-14 bg-white text-white shadow-sm">
-			<div className="flex items-center px-6 w-full gap-6">
-				<Identity />
-				<Navigation />
-			</div>
+		<header className="z-50 top-0 left-0 flex justify-between w-screen py-3 px-4 absolute">
+			<Identity />
+			<Navigation />
 		</header>
 	);
 }
