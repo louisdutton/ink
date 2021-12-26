@@ -2,19 +2,20 @@ import { FirebaseOptions, initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
-const OPTIONS: FirebaseOptions = {
-	apiKey: process.env.FB_API_KEY,
-	authDomain: process.env.FB_AUTH_DOMAIN,
-	databaseURL: process.env.FB_DATABASE_URL,
-	projectId: process.env.FB_PROJECT_ID,
-	storageBucket: process.env.FB_STORAGE_BUCKET,
-	messagingSenderId: process.env.FB_MESSAGING_SENDER_ID,
-	appId: process.env.FB_APP_ID,
-	measurementId: process.env.FB_MEASUREMENT_ID
+const config: FirebaseOptions = {
+	apiKey: 'AIzaSyDwAJDHN1NsP7R7e6z7l8f6YpREsIB0Hs4',
+	authDomain: 'draw-ink.firebaseapp.com',
+	databaseURL:
+		'https://draw-ink-default-rtdb.europe-west1.firebasedatabase.app',
+	projectId: 'draw-ink',
+	storageBucket: 'draw-ink.appspot.com',
+	messagingSenderId: '285619681204',
+	appId: '1:285619681204:web:5594c4077f5f257b6c64e1',
+	measurementId: 'G-GT9KQE2VQG'
 };
 
-console.log(OPTIONS);
-
-const app = initializeApp(OPTIONS);
+const app = initializeApp(config);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
+
+export default app;

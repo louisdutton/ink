@@ -29,7 +29,7 @@ type Message = {
 export default function Game() {
 	const [user] = useAuthState(auth);
 	const messagesCollection = collection(db, 'rooms/testing/messages');
-	const q = query(messagesCollection, limit(25), orderBy('createdAt'));
+	const q = query(messagesCollection, orderBy('createdAt'), limit(25));
 	const [messages] = useCollectionData(q);
 	const [formValue, setFormValue] = useState<string>('');
 
@@ -49,14 +49,14 @@ export default function Game() {
 	};
 
 	return (
-		<div className="py-20 h-screen flex">
-			<div className="w-screen h-full flex justify-between flex-col sm:flex-row">
+		<div className="h-screen flex items-center">
+			<div className="w-screen flex justify-evenly flex-col sm:flex-row">
 				<List<User>
 					items={[]}
 					render={(user: User) => <UserPlate user={user} />}
 				/>
 				<Canvas />
-				<div className="w-60">
+				<div className="w-60 hidden sm:flex flex-col justify-end gap-4 px-4">
 					<MessageFeed messages={messages} />
 					<form onSubmit={sendMessage}>
 						<input
@@ -66,7 +66,7 @@ export default function Game() {
 							value={formValue}
 							autoComplete="off"
 							onChange={(e) => setFormValue(e.target.value)}
-							className="px-4 py-2 mx-2 outline-none transition-colors group border-2 rounded
+							className="px-4 py-2 outline-none transition-colors group border-2 rounded
                         placeholder:text-neutral-400
                         hover:border-black
                         focus:border-neutral-800 focus:bg-neutral-100"
@@ -100,14 +100,20 @@ type MessageFeedProps = {
 };
 
 function MessageFeed({ messages }: MessageFeedProps) {
+	const ref = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		ref.current?.scrollTo(0, document.body.scrollHeight);
+	}, [messages]);
 	return messages ? (
-		<List<Message>
-			items={messages as any[]}
-			render={(msg: Message, i: number | undefined) => (
-				<MessageItem msg={msg} index={i as number} />
-			)}
-			className="justify-end flex flex-col p-4 w-full"
-		/>
+		<div className="overflow-y-scroll px-1 h-[500px]" ref={ref}>
+			<List<Message>
+				items={messages as any[]}
+				render={(msg: Message, i: number | undefined) => (
+					<MessageItem msg={msg} index={i as number} />
+				)}
+			/>
+		</div>
 	) : (
 		<div />
 	);

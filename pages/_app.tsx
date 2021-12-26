@@ -1,6 +1,7 @@
 import '../styles/main.css';
 import type { AppProps } from 'next/app';
 import Layout from '../components/Layout';
+import firebase from '../lib/firebase';
 
 function MyApp({ Component, pageProps }: AppProps) {
 	return (

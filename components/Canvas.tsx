@@ -93,8 +93,11 @@ export default function Canvas() {
 
 	return (
 		<div className="flex flex-col">
-			<canvas ref={ref} className="border-2 rounded-t-xl border-b-0" />
-			<div className="border-2 rounded-b-xl py-2 px-3 flex gap-4 items-center justify-between">
+			<canvas
+				ref={ref}
+				className="border-t-2 sm:border-2 sm:rounded-t-xl !border-b-0"
+			/>
+			<div className="border-2 rounded-b-xl py-3 flex flex-col sm:flex-row gap-4 items-center justify-evenly">
 				<Palette setColor={setColor} />
 				<Toolbar />
 			</div>
