@@ -1,8 +1,6 @@
-import { FirebaseOptions, initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
+import { FirebaseOptions } from 'firebase/app';
 
-const OPTIONS: FirebaseOptions = {
+const options: FirebaseOptions = {
 	apiKey: process.env.FB_API_KEY,
 	authDomain: process.env.FB_AUTH_DOMAIN,
 	databaseURL: process.env.FB_DATABASE_URL,
@@ -13,8 +11,4 @@ const OPTIONS: FirebaseOptions = {
 	measurementId: process.env.FB_MEASUREMENT_ID
 };
 
-console.log(OPTIONS);
-
-const app = initializeApp(OPTIONS);
-export const db = getFirestore(app);
-export const auth = getAuth(app);
+export default options;

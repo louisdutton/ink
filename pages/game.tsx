@@ -1,9 +1,19 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, FormEvent } from 'react';
 import List from '../components/List';
-import { UserCircle } from 'phosphor-react';
-import { getAuth, signInAnonymously } from 'firebase/auth';
-import { firebase, auth } from '../lib/firebase';
+import { UserCircle, ArrowBendLeftDown, Spinner } from 'phosphor-react';
 import Canvas from '../components/Canvas';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth, db } from '../lib/firebase';
+import {
+	collection,
+	limit,
+	query,
+	addDoc,
+	doc,
+	serverTimestamp,
+	orderBy
+} from 'firebase/firestore';
 
 type User = {
 	name: string;
@@ -12,62 +22,58 @@ type User = {
 };
 
 type Message = {
-	author: User;
+	author: string;
 	content: string;
 };
 
-let USERS: User[] = [
-	{ name: 'Dr. Tim', img: undefined, position: 0 },
-	{ name: 'Hex', img: undefined, position: 1 },
-	{ name: 'Louis', img: undefined, position: 2 },
-	{ name: 'Fuzzy', img: undefined, position: 3 }
-];
-
-const MESSAGES: Message[] = [
-	{ author: USERS[0], content: 'hey guys!' },
-	{ author: USERS[3], content: 'sup doc' },
-	{ author: USERS[2], content: 'hi everyone' },
-	{ author: USERS[3], content: 'chicken salad' },
-	{ author: USERS[1], content: 'fish cakes' },
-	{ author: USERS[2], content: 'dead wasps' },
-	{ author: USERS[1], content: 'lonely cats' }
-];
-
 export default function Game() {
-	const [messages, setMessages] = useState(MESSAGES);
+	const [user] = useAuthState(auth);
+	const messagesCollection = collection(db, 'rooms/testing/messages');
+	const q = query(messagesCollection, limit(25), orderBy('createdAt'));
+	const [messages] = useCollectionData(q);
+	const [formValue, setFormValue] = useState<string>('');
+
+	const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		if (formValue === '') return;
+
+		const data = {
+			author: user?.displayName,
+			content: formValue,
+			createdAt: serverTimestamp()
+		};
+
+		await addDoc(collection(db, 'rooms/testing/messages'), data);
+
+		setFormValue('');
+	};
 
 	return (
 		<div className="py-20 h-screen flex">
 			<div className="w-screen h-full flex justify-between flex-col sm:flex-row">
 				<List<User>
-					items={USERS}
+					items={[]}
 					render={(user: User) => <UserPlate user={user} />}
 				/>
 				<Canvas />
-				<div className="">
-					<List<Message>
-						items={messages}
-						render={(msg: Message, i: number | undefined) => (
-							<MessageItem msg={msg} index={i as number} />
-						)}
-						className="justify-end flex flex-col p-4"
-					/>
-					<form
-						onSubmit={(e) =>
-							setMessages([...messages, { author: USERS[0], content: 'Hello' }])
-						}>
+				<div className="w-60">
+					<MessageFeed messages={messages} />
+					<form onSubmit={sendMessage}>
 						<input
 							id="message"
 							type="text"
 							placeholder="Enter message"
+							value={formValue}
+							autoComplete="off"
+							onChange={(e) => setFormValue(e.target.value)}
 							className="px-4 py-2 mx-2 outline-none transition-colors group border-2 rounded
                         placeholder:text-neutral-400
                         hover:border-black
                         focus:border-neutral-800 focus:bg-neutral-100"
 						/>
+						<button type="submit" />
 					</form>
 				</div>
-				{/* <Button onClick={() => console.log('pressed')}>Generate</Button> */}
 			</div>
 		</div>
 	);
@@ -89,19 +95,35 @@ function UserPlate({ user }: UserPlateProps) {
 	);
 }
 
+type MessageFeedProps = {
+	messages: any;
+};
+
+function MessageFeed({ messages }: MessageFeedProps) {
+	return messages ? (
+		<List<Message>
+			items={messages as any[]}
+			render={(msg: Message, i: number | undefined) => (
+				<MessageItem msg={msg} index={i as number} />
+			)}
+			className="justify-end flex flex-col p-4 w-full"
+		/>
+	) : (
+		<div />
+	);
+}
+
 type MessageItemProps = {
 	msg: Message;
 	index: number;
 };
 
 function MessageItem({ msg, index }: MessageItemProps) {
-	console.log(index);
-
 	return (
-		<div className="flex gap-2">
-			{msg.author && <div className="font-bold">{msg.author.name}</div>}
-			<div className="text-neutral-500">{msg.content}</div>
-		</div>
+		<p>
+			<span className="font-bold">{msg.author + ' '}</span>
+			<span className="text-neutral-500">{msg.content}</span>
+		</p>
 	);
 }
 
