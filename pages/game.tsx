@@ -1,17 +1,16 @@
-import { useState, useEffect, useRef, FormEvent } from 'react';
 import List from '../components/List';
-import { UserCircle, ArrowBendLeftDown, Spinner } from 'phosphor-react';
+import { UserCircle } from 'phosphor-react';
 import Canvas from '../components/Canvas';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '../lib/firebase';
+import Messages from '../components/Messages';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 import {
 	collection,
-	limit,
-	query,
-	addDoc,
-	serverTimestamp,
-	orderBy
+	deleteDoc,
+	doc,
+	setDoc,
+	WithFieldValue
 } from 'firebase/firestore';
 
 type User = {
@@ -20,70 +19,33 @@ type User = {
 	position: number;
 };
 
-type Message = {
-	author: string;
-	content: string;
-};
-
 export default function Game() {
 	const [user] = useAuthState(auth);
-	const messagesCollection = collection(db, 'rooms/testing/messages');
-	const q = query(messagesCollection, orderBy('createdAt'));
-	const [messages] = useCollectionData(q);
-	const [formValue, setFormValue] = useState<string>('');
+	// const usersCollection = collection(db, 'rooms/testing/users');
+	// const [users] = useCollectionData(usersCollection);
+	const users = null;
 
-	// message scroll
-	const ref = useRef<HTMLDivElement>(null);
-	useEffect(
-		() => ref.current?.scrollIntoView({ behavior: 'smooth' }),
-		[messages]
-	);
+	// const joinLobby = async () => {
+	// 	if (!user) return;
+	// 	await setDoc(doc(usersCollection, 'uid'), user.uid);
+	// };
 
-	const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		if (formValue === '') return;
-
-		const data = {
-			author: user?.displayName,
-			content: formValue,
-			createdAt: serverTimestamp()
-		};
-
-		await addDoc(collection(db, 'rooms/testing/messages'), data);
-
-		setFormValue('');
-		// ref.current?.scrollIntoView({ behavior: 'smooth' });
-	};
+	// const leaveLobby = async () => {
+	// 	if (!user) return;
+	// 	await deleteDoc(doc(usersCollection, 'uid'));
+	// };
 
 	return (
 		<div className="h-screen flex items-center">
 			<div className="w-screen flex justify-evenly flex-col sm:flex-row">
-				<List<User>
-					items={[]}
-					render={(user: User) => <UserPlate user={user} />}
-				/>
+				{users && (
+					<List<any>
+						items={users as any[]}
+						render={(user: User) => <UserPlate user={user} />}
+					/>
+				)}
 				<Canvas />
-				<div className="w-60 hidden sm:flex flex-col justify-end gap-4 px-4">
-					<div className="overflow-y-scroll px-1 h-[500px]">
-						<MessageFeed messages={messages} />
-						<div ref={ref} />
-					</div>
-					<form onSubmit={sendMessage}>
-						<input
-							id="message"
-							type="text"
-							placeholder="Enter message"
-							value={formValue}
-							autoComplete="off"
-							onChange={(e) => setFormValue(e.target.value)}
-							className="px-4 py-2 outline-none transition-colors group border-2 rounded
-                        placeholder:text-neutral-400
-                        hover:border-black
-                        focus:border-neutral-800 focus:bg-neutral-100"
-						/>
-						<button type="submit" />
-					</form>
-				</div>
+				<Messages user={user} />
 			</div>
 		</div>
 	);
@@ -102,49 +64,5 @@ function UserPlate({ user }: UserPlateProps) {
 			</div>
 			<p className="font-bold whitespace-nowrap">{user.name}</p>
 		</div>
-	);
-}
-
-type MessageFeedProps = {
-	messages: any;
-};
-
-function MessageFeed({ messages }: MessageFeedProps) {
-	return messages ? (
-		<List<Message>
-			items={messages as any[]}
-			render={(msg: Message, i: number | undefined) => (
-				<MessageItem msg={msg} index={i as number} />
-			)}
-		/>
-	) : (
-		<div />
-	);
-}
-
-type MessageItemProps = {
-	msg: Message;
-	index: number;
-};
-
-function MessageItem({ msg, index }: MessageItemProps) {
-	return (
-		<p>
-			<span className="font-bold">{msg.author + ' '}</span>
-			<span className="text-neutral-500">{msg.content}</span>
-		</p>
-	);
-}
-
-function Word() {
-	return (
-		<p className="absolute font-bold text-2xl top-2 flex gap-1 pointer-events-none">
-			<span className="underline">B</span>
-			<span className="underline">a</span>
-			<span className="underline">n</span>
-			<span className="underline">a</span>
-			<span className="underline">n</span>
-			<span className="underline">a</span>
-		</p>
 	);
 }

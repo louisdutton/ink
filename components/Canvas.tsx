@@ -1,7 +1,6 @@
-import { setUncaughtExceptionCaptureCallback } from 'process';
 import { useEffect, useRef, useState } from 'react';
 import Palette from '../components/Palette';
-import Toolbar from '../components/Toolbar';
+import Toolbar, { Tool } from '../components/Toolbar';
 
 const dimensions = {
 	width: 700,
@@ -32,17 +31,6 @@ export default function Canvas() {
 		ctx.lineWidth = 5;
 		ctx.lineCap = 'round';
 		ctx.lineJoin = 'round';
-
-		// Selecting all the div that has a class of clr
-		// let clrs = document.querySelectorAll('.clr');
-		// Converting NodeList to Array
-		// clrs = Array.from(clrs);
-
-		// clrs.forEach((clr) => {
-		// 	clr.addEventListener('click', () => {
-		// 		ctx.strokeStyle = clr.dataset.clr;
-		// 	});
-		// });
 
 		// variables
 		let prevX: number;

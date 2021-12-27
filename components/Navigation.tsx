@@ -1,4 +1,4 @@
-import { UserCircle } from 'phosphor-react';
+import { UserCircle, UserFocus } from 'phosphor-react';
 import { User } from 'firebase/auth';
 import Image from 'next/image';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -32,8 +32,8 @@ function UserIcon({ user }: UserIconProps) {
 		// 	height={40}
 		// 	className="rounded-full border-2 border-black"
 		// />
-		<UserCircle size={40} />
+		<UserCircle size={40} weight="fill" />
 	) : (
-		<UserCircle size={40} />
+		<UserCircle size={40} weight="fill" />
 	);
 }
