@@ -28,7 +28,7 @@ type Message = {
 export default function Game() {
 	const [user] = useAuthState(auth);
 	const messagesCollection = collection(db, 'rooms/testing/messages');
-	const q = query(messagesCollection, limit(25), orderBy('createdAt'));
+	const q = query(messagesCollection, orderBy('createdAt'));
 	const [messages] = useCollectionData(q);
 	const [formValue, setFormValue] = useState<string>('');
 
@@ -52,7 +52,7 @@ export default function Game() {
 		await addDoc(collection(db, 'rooms/testing/messages'), data);
 
 		setFormValue('');
-		ref.current?.scrollIntoView({ behavior: 'smooth' });
+		// ref.current?.scrollIntoView({ behavior: 'smooth' });
 	};
 
 	return (
