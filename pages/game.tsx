@@ -28,13 +28,16 @@ type Message = {
 export default function Game() {
 	const [user] = useAuthState(auth);
 	const messagesCollection = collection(db, 'rooms/testing/messages');
-	const q = query(messagesCollection, orderBy('createdAt'));
+	const q = query(messagesCollection, limit(25), orderBy('createdAt'));
 	const [messages] = useCollectionData(q);
 	const [formValue, setFormValue] = useState<string>('');
 
+	// message scroll
 	const ref = useRef<HTMLDivElement>(null);
-
-	// useEffect(() => {}, [messages]);a
+	useEffect(
+		() => ref.current?.scrollIntoView({ behavior: 'smooth' }),
+		[messages]
+	);
 
 	const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
