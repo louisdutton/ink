@@ -10,7 +10,6 @@ import {
 	limit,
 	query,
 	addDoc,
-	doc,
 	serverTimestamp,
 	orderBy
 } from 'firebase/firestore';
@@ -29,9 +28,13 @@ type Message = {
 export default function Game() {
 	const [user] = useAuthState(auth);
 	const messagesCollection = collection(db, 'rooms/testing/messages');
-	const q = query(messagesCollection, orderBy('createdAt'), limit(25));
+	const q = query(messagesCollection, orderBy('createdAt'));
 	const [messages] = useCollectionData(q);
 	const [formValue, setFormValue] = useState<string>('');
+
+	const ref = useRef<HTMLDivElement>(null);
+
+	// useEffect(() => {}, [messages]);a
 
 	const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -46,6 +49,7 @@ export default function Game() {
 		await addDoc(collection(db, 'rooms/testing/messages'), data);
 
 		setFormValue('');
+		ref.current?.scrollIntoView({ behavior: 'smooth' });
 	};
 
 	return (
@@ -57,7 +61,10 @@ export default function Game() {
 				/>
 				<Canvas />
 				<div className="w-60 hidden sm:flex flex-col justify-end gap-4 px-4">
-					<MessageFeed messages={messages} />
+					<div className="overflow-y-scroll px-1 h-[500px]">
+						<MessageFeed messages={messages} />
+						<div ref={ref} />
+					</div>
 					<form onSubmit={sendMessage}>
 						<input
 							id="message"
@@ -100,20 +107,13 @@ type MessageFeedProps = {
 };
 
 function MessageFeed({ messages }: MessageFeedProps) {
-	const ref = useRef<HTMLDivElement>(null);
-
-	useEffect(() => {
-		ref.current?.scrollTo(0, document.body.scrollHeight);
-	}, [messages]);
 	return messages ? (
-		<div className="overflow-y-scroll px-1 h-[500px]" ref={ref}>
-			<List<Message>
-				items={messages as any[]}
-				render={(msg: Message, i: number | undefined) => (
-					<MessageItem msg={msg} index={i as number} />
-				)}
-			/>
-		</div>
+		<List<Message>
+			items={messages as any[]}
+			render={(msg: Message, i: number | undefined) => (
+				<MessageItem msg={msg} index={i as number} />
+			)}
+		/>
 	) : (
 		<div />
 	);
