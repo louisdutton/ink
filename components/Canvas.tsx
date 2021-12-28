@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState, ReactNode, PointerEvent } from 'react';
+import {
+	useEffect,
+	useRef,
+	useState,
+	PointerEvent,
+	KeyboardEvent
+} from 'react';
 import Palette from '../components/Palette';
 import List from './List';
 import IconButton from './IconButton';
@@ -53,7 +59,7 @@ export default function Canvas() {
 		setPosition([x, y]);
 	};
 
-	const handleKeyDown = (e: KeyboardEvent) => {
+	const handleKeyDown = (e: KeyboardEvent<HTMLCanvasElement>) => {
 		e.preventDefault();
 		if (!ctx) return;
 
@@ -89,14 +95,6 @@ export default function Canvas() {
 		ctx.lineWidth = 5;
 		ctx.lineCap = 'round';
 		ctx.lineJoin = 'round';
-
-		// subscribe
-		window.addEventListener('keydown', handleKeyDown);
-
-		// unsubscribe
-		return () => {
-			window.removeEventListener('keydown', handleKeyDown);
-		};
 	}, []);
 
 	return (
@@ -108,6 +106,7 @@ export default function Canvas() {
 				onPointerMove={(e) => handlePointerMove(e)}
 				onPointerDown={() => setDraw(true)}
 				onPointerUp={() => setDraw(false)}
+				onKeyDown={(e) => handleKeyDown(e)}
 			/>
 			<div className="border-2 rounded-b-xl py-3 flex flex-col sm:flex-row gap-4 items-center justify-evenly">
 				<Palette setColor={(col) => setColor(col)} />
