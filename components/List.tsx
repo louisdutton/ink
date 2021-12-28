@@ -1,7 +1,7 @@
 import React from 'react';
 
 type Key = React.Key | null | undefined;
-export type RenderFunction<T> = (item: T, i?: number) => React.ReactNode;
+export type RenderFunction<T> = (item: T, i: number) => React.ReactNode;
 export type KeyFunction<T> = (item: T, i: number) => Key;
 
 type Props<T> = {

@@ -48,15 +48,17 @@ export default function Messages({ user }: Props) {
 
 		setFormValue('');
 	};
-	return messages ? (
+	return (
 		<div className="w-60 hidden sm:flex flex-col justify-end gap-4 px-4">
 			<div className="overflow-y-scroll px-1 h-[500px]">
-				<List<MessageData>
-					items={messages as any[]}
-					render={(data: MessageData, i: number | undefined) => (
-						<Message data={data} />
-					)}
-				/>
+				{messages && (
+					<List<MessageData>
+						items={messages as any[]}
+						render={(data: MessageData, i: number | undefined) => (
+							<Message data={data} />
+						)}
+					/>
+				)}
 				<div ref={ref} />
 			</div>
 			<form onSubmit={sendMessage}>
@@ -75,8 +77,6 @@ export default function Messages({ user }: Props) {
 				<button type="submit" />
 			</form>
 		</div>
-	) : (
-		<div />
 	);
 }
 

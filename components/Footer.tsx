@@ -2,7 +2,7 @@ export default function Footer() {
 	const year = new Date().getFullYear();
 
 	return (
-		<footer className="z-50 flex justify-center w-screen absolute bottom-0 text-neutral-400">
+		<footer className="z-50 hidden sm:flex justify-center w-screen absolute bottom-0 text-neutral-400">
 			<div className="flex flex-col items-center justify-center max-w-5xl p-6 gap-4">
 				<p className="text-text-secondary text-xs">
 					Copyright © {year}{' '}

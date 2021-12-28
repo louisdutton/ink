@@ -4,12 +4,11 @@ module.exports = {
 		'./components/**/*.{js,ts,jsx,tsx}'
 	],
 	theme: {
-		extend: {
-			fontFamily: {
-				sans: ['System-UI', 'serif'],
-				cursive: ['Shizuru', 'cursive']
-			}
-		}
+		fontFamily: {
+			serif: ['Roboto Slab', 'serif'],
+			cursive: ['Architects Daughter', 'cursive']
+		},
+		extend: {}
 	},
 	plugins: []
 };

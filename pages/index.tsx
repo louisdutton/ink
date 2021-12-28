@@ -4,12 +4,16 @@ import { Meta } from '../components/Meta';
 import Button from '../components/Button';
 import SignIn from '../components/SignIn';
 import { Drop } from 'phosphor-react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../lib/firebase';
 
 export default function Home() {
+	const [user] = useAuthState(auth);
+
 	return (
 		<div className="w-full">
 			<Head>
-				<Meta title="Draw.Ink" description={'An online drawing game'} />
+				<Meta title="draw.Ink" description={'An online drawing game'} />
 			</Head>
 
 			<div className="h-screen flex justify-center items-center">
@@ -21,7 +25,7 @@ export default function Home() {
 					<SignIn />
 					<div className="w-full flex justify-center">
 						<Link href="/game" passHref>
-							<Button>Play</Button>
+							<Button>{(user && 'Play') || 'Play Anynomously'}</Button>
 						</Link>
 					</div>
 				</div>
