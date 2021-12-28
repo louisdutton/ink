@@ -23,11 +23,13 @@ export default function Home() {
 						<h1 className="font-bold text-8xl">draw.ink</h1>
 					</div>
 					<SignIn />
-					<div className="w-full flex justify-center">
-						<Link href="/game" passHref>
-							<Button>{(user && 'Play') || 'Play Anynomously'}</Button>
-						</Link>
-					</div>
+					{user && (
+						<div className="w-full flex justify-center">
+							<Link href="/game" passHref>
+								<Button>Play</Button>
+							</Link>
+						</div>
+					)}
 				</div>
 			</div>
 		</div>

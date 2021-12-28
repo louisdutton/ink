@@ -44,7 +44,7 @@ export default function SignIn() {
 				<IconButton onClick={() => signInWithPopup(auth, provider.github)}>
 					<GithubLogo size={30} weight="fill" />
 				</IconButton>
-				<IconButton
+				{/* <IconButton
 					onClick={() => console.log('Discord auth is not yet implemented.')}>
 					<DiscordLogo size={30} weight="fill" />
 				</IconButton>
@@ -55,7 +55,7 @@ export default function SignIn() {
 				<IconButton
 					onClick={() => console.log('Twitter auth is not yet implemented.')}>
 					<TwitterLogo size={30} weight="fill" />
-				</IconButton>
+				</IconButton> */}
 			</div>
 		</div>
 	);
