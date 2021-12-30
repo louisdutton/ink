@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
 import Navigation from './Navigation';
-// import Search from './Search'
-import { List, Sun, Moon, MagnifyingGlass } from 'phosphor-react';
-import IconButton from './IconButton';
 import Identity from './Identity';
 
-// TODO: Implement search
 export default function Header() {
 	const [open, setOpen] = useState(false);
 

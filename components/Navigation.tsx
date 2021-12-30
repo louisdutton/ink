@@ -1,42 +1,47 @@
 import { UserCircle, Bell } from 'phosphor-react';
-import { User } from 'firebase/auth';
 import Image from 'next/image';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '../lib/firebase';
-import { signOut } from 'firebase/auth';
+import supabase, { fetchProfile, Profile, UserContext } from '../lib/supabase';
+import { useContext, useEffect, useState } from 'react';
 
-type Props = {
-	mobile?: boolean;
-};
+export default function Navigation() {
+	const [profile, setProfile] = useState<Profile>();
+	const user = useContext(UserContext);
 
-export default function Navigation({ mobile = false, ...props }: Props) {
-	const [user] = useAuthState(auth);
+	useEffect(() => {
+		if (!user) return;
+		fetchProfile(user).then((data) => {
+			if (data) setProfile(data);
+		});
+	}, [user]);
 
-	return (
-		<nav {...props} className={`h-full flex relative items-center gap-3`}>
-			{user && <p className="font-bold">{user.displayName}</p>}
-			<Bell size={24} weight="duotone" />
-			<UserIcon user={user} />
+	return profile ? (
+		<nav className={`h-full flex relative items-center gap-3`}>
+			<p className="font-bold">{profile.username}</p>
+			<Bell size={30} weight="duotone" />
+			<UserCircle
+				size={30}
+				weight="duotone"
+				onClick={() => supabase.auth.signOut()}
+			/>
 		</nav>
+	) : (
+		<div />
 	);
 }
 
-type UserIconProps = {
-	user: User | null | undefined;
+type AvatarProps = {
+	url: string;
 };
 
-function UserIcon({ user }: UserIconProps) {
-	return user?.photoURL ? (
+function Avatar({ url }: AvatarProps) {
+	return (
 		<div className="w-8 h-8 border-2 border-black rounded-full relative overflow-hidden">
 			<Image
-				src={user.photoURL}
+				src={url}
 				alt="User profile picture"
 				layout="fill"
 				objectFit="cover"
 			/>
 		</div>
-	) : (
-		// <UserCircle size={40} weight="fill" />
-		<UserCircle size={40} weight="duotone" />
 	);
 }

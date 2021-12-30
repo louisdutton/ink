@@ -1,10 +1,4 @@
-import {
-	useEffect,
-	useRef,
-	useState,
-	PointerEvent,
-	KeyboardEvent
-} from 'react';
+import { useEffect, useRef, useState, PointerEvent } from 'react';
 import Palette from '../components/Palette';
 import List from './List';
 import IconButton from './IconButton';
@@ -59,7 +53,7 @@ export default function Canvas() {
 		setPosition([x, y]);
 	};
 
-	const handleKeyDown = (e: KeyboardEvent<HTMLCanvasElement>) => {
+	const handleKeyPress = (e: KeyboardEvent) => {
 		e.preventDefault();
 		if (!ctx) return;
 
@@ -97,6 +91,15 @@ export default function Canvas() {
 		ctx.lineJoin = 'round';
 	}, []);
 
+	// key bindings
+	// useEffect(() => {
+	// 	window.addEventListener('keydown', handleKeyPress);
+
+	// 	return () => {
+	// 		window.removeEventListener('keydown', handleKeyPress);
+	// 	};
+	// });
+
 	return (
 		<div className="flex flex-col">
 			{/* <div className="border border-black h-4 w-4" /> */}
@@ -104,9 +107,9 @@ export default function Canvas() {
 				ref={ref}
 				className="border-t-2 sm:border-2 sm:rounded-t-xl !border-b-0 cursor-cell"
 				onPointerMove={(e) => handlePointerMove(e)}
-				onPointerDown={() => setDraw(true)}
-				onPointerUp={() => setDraw(false)}
-				onKeyDown={(e) => handleKeyDown(e)}
+				onPointerDown={(e) => setDraw(true)}
+				onPointerUp={(e) => setDraw(false)}
+				// onKeyDown={(e) => handleKeyDown(e)}
 			/>
 			<div className="border-2 rounded-b-xl py-3 flex flex-col sm:flex-row gap-4 items-center justify-evenly">
 				<Palette setColor={(col) => setColor(col)} />
