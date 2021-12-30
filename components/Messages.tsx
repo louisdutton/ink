@@ -17,7 +17,7 @@ export default function Messages({ messages }: Props) {
 	}, [messages]);
 
 	return (
-		<div className="overflow-y-scroll px-1 h-[500px]">
+		<div className="overflow-y-scroll px-1 h-[500px] flex flex-col justify-end">
 			{messages && (
 				<List<Message>
 					items={messages as any[]}

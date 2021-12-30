@@ -1,4 +1,4 @@
-import { createClient, Provider, Session, User } from '@supabase/supabase-js';
+import { createClient, User } from '@supabase/supabase-js';
 import { type } from 'os';
 import { useEffect, useState, createContext, useContext } from 'react';
 
@@ -39,76 +39,45 @@ type Props = {
 export const useStore = (props: Props) => {
 	const [rooms, setRooms] = useState<Room[]>([]);
 	const [messages, setMessages] = useState<Message[]>([]);
-	const [users] = useState(new Map());
-	const [newMessage, handleNewMessage] = useState<Message>();
+	const [users, setUsers] = useState<User[]>([]);
+	const [profiles, setProfiles] = useState<Profile[]>([]);
 	const [newRoom, handleNewRoom] = useState<Room>();
-	const [newOrUpdatedUser, handleNewOrUpdatedUser] = useState<User>();
 	const [deletedroom, handleDeletedRoom] = useState<Room>();
-	const [deletedMessage, handleDeletedMessage] = useState<Message>();
+
+	const handleNewMessage = (msg: Message) => {
+		setMessages((previous) => Array<Message>().concat(previous, msg));
+	};
 
 	// Load initial data and set up listeners
 	useEffect(() => {
 		// Get rooms
 		fetchRooms(setRooms);
-		// Listen for new and deleted messages
+		// Listen for new messages
 		const messageListener = supabase
-			.from('messages')
+			.from<Message>('messages')
 			.on('INSERT', (payload) => handleNewMessage(payload.new))
 			.subscribe();
-		// Listen for changes to our users
-		const userListener = supabase
-			.from('profiles')
-			.on('*', (payload) => handleNewOrUpdatedUser(payload.new))
-			.subscribe();
 		// Listen for new and deleted rooms
-		const roomListener = supabase
-			.from('rooms')
-			.on('INSERT', (payload) => handleNewRoom(payload.new))
-			.on('DELETE', (payload) => handleDeletedRoom(payload.old))
-			.subscribe();
-		// Cleanup on unmount
+		// const roomListener = supabase
+		// 	.from('rooms')
+		// 	.on('INSERT', (payload) => handleNewRoom(payload.new))
+		// 	.on('DELETE', (payload) => handleDeletedRoom(payload.old))
+		// 	.subscribe();
+
+		// Cleanup
 		return () => {
 			messageListener.unsubscribe();
-			userListener.unsubscribe();
-			roomListener.unsubscribe();
+			// roomListener.unsubscribe();
 		};
 	}, []);
 
 	// Update when the route changes
 	useEffect(() => {
 		if (props?.roomId > 0) {
-			fetchMessages(props.roomId, (messages: Message[]) => {
-				messages.forEach((x) => users.set(x.user_id, x.author));
-				setMessages(messages);
-			});
+			fetchMessages(props.roomId, setMessages);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.roomId]);
-
-	// New message received from Postgres
-	useEffect(() => {
-		if (newMessage && newMessage.room_id === Number(props.roomId)) {
-			const handleAsync = async () => {
-				let authorId = newMessage.user_id;
-				if (!users.get(authorId))
-					await fetchUser(authorId, (user: User) =>
-						handleNewOrUpdatedUser(user)
-					);
-				setMessages(messages.concat(newMessage));
-			};
-			handleAsync();
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [newMessage]);
-
-	// Deleted message received from postgres
-	useEffect(() => {
-		if (deletedMessage)
-			setMessages(
-				messages.filter((message) => message.id !== deletedMessage.id)
-			);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [deletedMessage]);
 
 	// New room received from Postgres
 	useEffect(() => {
@@ -123,15 +92,9 @@ export const useStore = (props: Props) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [deletedroom]);
 
-	// New or updated user received from Postgres
-	useEffect(() => {
-		if (newOrUpdatedUser) users.set(newOrUpdatedUser.id, newOrUpdatedUser);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [newOrUpdatedUser]);
-
 	return {
 		// We can export computed values here to map the authors to each message
-		messages: messages.map((x) => ({ ...x, author: users.get(x.user_id) })),
+		messages,
 		rooms:
 			rooms !== null ? rooms.sort((a, b) => a.slug.localeCompare(b.slug)) : [],
 		users
@@ -162,11 +125,11 @@ export const fetchUser = async (userId: string, setState: Function) => {
 	}
 };
 
-export const fetchUserRoles = async (setState: Function) => {
+export const fetchModerators = async (setState: Function) => {
 	try {
-		let { body } = await supabase.from('user_roles').select(`*`);
-		if (setState) setState(body);
-		return body;
+		const { data } = await supabase.from('moderators').select('*');
+		if (setState) setState(data);
+		return data;
 	} catch (error) {
 		console.log('error', error);
 	}
@@ -174,9 +137,9 @@ export const fetchUserRoles = async (setState: Function) => {
 
 export const fetchMessages = async (roomId: number, setState: Function) => {
 	try {
-		let { body } = await supabase
+		const { body } = await supabase
 			.from('messages')
-			.select(`*, author:user_id(*)`)
+			.select(`*`)
 			.eq('room_id', roomId)
 			.order('created_at', { ascending: true });
 
@@ -237,7 +200,7 @@ export const deleteMessage = async (message_id: number) => {
 export async function fetchProfile(user: User) {
 	const { data, error } = await supabase
 		.from<Profile>('profiles')
-		.select('id, username')
+		.select('*')
 		.eq('id', user.id)
 		.single();
 

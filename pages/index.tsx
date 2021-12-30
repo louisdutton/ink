@@ -51,7 +51,7 @@ function RoomList() {
 	const [rooms, setRooms] = useState<Room[]>([]);
 
 	useEffect(() => {
-		const rooms = fetchRooms(setRooms).then((rooms) => console.log(rooms));
+		const promise = fetchRooms(setRooms).then((rooms) => console.log(rooms));
 	}, []);
 
 	return (
@@ -59,7 +59,11 @@ function RoomList() {
 			<h2 className="font-bold text-4xl py-8 flex justify-center">
 				Choose a room
 			</h2>
-			<List<Room> items={rooms} render={(room) => <RoomCard room={room} />} />
+			<List<Room>
+				items={rooms}
+				render={(room) => <RoomCard room={room} />}
+				className="grid grid-cols-2 gap-2"
+			/>
 		</div>
 	);
 }

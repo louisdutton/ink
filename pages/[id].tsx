@@ -55,25 +55,6 @@ export default function RoomPage() {
 			</div>
 		</div>
 	);
-
-	// Render the channels and messages
-	return (
-		<div className="relative h-screen">
-			{/* <div className="Messages h-full pb-16">
-				<div className="p-2 overflow-y-auto">
-					{messages.map((x) => (
-						<Message key={x.id} message={x} />
-					))}
-					<div ref={messagesEndRef} style={{ height: 0 }} />
-				</div>
-			</div>
-			<div className="p-2 absolute bottom-0 left-0 w-full">
-				<MessageInput
-					onSubmit={async (text: string) => addMessage(text, roomId, user.id)}
-				/>
-			</div> */}
-		</div>
-	);
 }
 
 type UserPlateProps = {
