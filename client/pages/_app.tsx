@@ -4,6 +4,7 @@ import Layout from '../components/Layout';
 import supabase, { UserContext } from '../lib/supabase';
 import { Session, User } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
+import SocketProvider from '../components/SocketContext';
 
 export default function DrawDotInk({ Component, pageProps }: AppProps) {
 	const [user, setUser] = useState<User | null>(null);
@@ -29,9 +30,11 @@ export default function DrawDotInk({ Component, pageProps }: AppProps) {
 
 	return (
 		<UserContext.Provider value={user}>
-			<Layout>
-				<Component {...pageProps} />
-			</Layout>
+			<SocketProvider>
+				<Layout>
+					<Component {...pageProps} />
+				</Layout>
+			</SocketProvider>
 		</UserContext.Provider>
 	);
 }
