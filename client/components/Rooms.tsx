@@ -1,32 +1,44 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Button from './Button';
 import List from './List';
-import { useSockets } from './SocketContext';
+import { Room, useSockets } from './SocketContext';
 import { BookOpen, Users } from 'phosphor-react';
 import EVENTS from '../config/events';
 import { useRouter } from 'next/router';
 import { useAuth } from './AuthContext';
+import Card from './Card';
 
 function RoomsContainer() {
 	const router = useRouter();
 	const { socket, roomId, rooms } = useSockets();
 	const newRoomRef = useRef<HTMLInputElement>(null);
-	const lobbyFull = false; // dummy
 	const { profile } = useAuth();
 
 	function handleCreateRoom() {
 		if (!profile) return;
-		//get the room name
-		const roomName = newRoomRef.current?.value || '';
 
-		if (!roomName.trim()) return;
+		// validate room name
+		const name = newRoomRef.current?.value || '';
+		if (!name.trim()) return;
 
 		// emit room created event
-		socket.emit(EVENTS.CLIENT.CREATE_ROOM, { roomName });
+		socket.emit(EVENTS.CLIENT.CREATE_ROOM, {
+			name,
+			capacity: 8,
+			theme: 'General'
+		} as Room);
 	}
 
+	// useEffect(() => {
+	// 	if (roomId) {
+	// 		router.push(roomId);
+	// 	}
+	// }, [roomId]);
+
 	function handleJoinRoom(key: string) {
+		console.log(roomId, key);
+
 		if (!profile) return;
 		socket.emit(EVENTS.CLIENT.JOIN_ROOM, key, profile.username);
 		router.push(key);
@@ -34,63 +46,55 @@ function RoomsContainer() {
 
 	return (
 		<nav className="">
-			<div className="flex gap-4">
-				<input
-					ref={newRoomRef}
-					placeholder="room name"
-					className="border-2 rounded px-4"
+			<div className="flex gap-2 flex-col">
+				<h1 className="font-bold text-4xl text-center py-4">
+					Join or create a room
+				</h1>
+				<div className="flex gap-2 w-full">
+					<input
+						ref={newRoomRef}
+						placeholder="Enter room name"
+						className="border-2 rounded px-4 py-2 flex-1 hover:border-black outline-none transition-colors focus:border-black focus:bg-neutral-100"
+					/>
+					<Button onClick={handleCreateRoom}>Create Room</Button>
+				</div>
+				<List<string>
+					items={Object.keys(rooms)}
+					render={(key: string) => (
+						<div key={key} onClick={() => handleJoinRoom(key)}>
+							<RoomCard room={rooms[key]} />
+						</div>
+					)}
+					className="grid gap-2 sm:grid-cols-2"
 				/>
-				<Button onClick={handleCreateRoom}>Create Room</Button>
 			</div>
-
-			<List<string>
-				items={Object.keys(rooms)}
-				render={(key: string) => (
-					<div key={key}>
-						<button
-							className="disabled:text-neutral-500 border-2 px-5 py-2 rounded"
-							disabled={lobbyFull}
-							title={`Join ${rooms[key].name}`}
-							onClick={() => handleJoinRoom(key)}>
-							{rooms[key].name}
-						</button>
-					</div>
-				)}
-				className="grid"
-			/>
-			<ul className="">
-				{Object.keys(rooms).map((key) => {
-					return <div key={key}></div>;
-				})}
-			</ul>
 		</nav>
 	);
 }
-
-// type RoomCardProps = {
-// 	room: object;
-// };
-
-// const RoomCard = ({ room }: RoomCardProps) => {
-// 	return (
-// 		<Link href={`/${room.id}`} passHref>
-// 			<div>
-// 				<Card className="p-5 hover:border-black cursor-pointer bg-white flex flex-col gap-2">
-// 					<h3 className="font-bold text-2xl">{}</h3>
-// 					<div className="flex gap-8">
-// 						<div className="flex items-center gap-2">
-// 							<Users size={30} />
-// 							<p>0/8</p>
-// 						</div>
-// 						<div className="flex items-center gap-2">
-// 							<BookOpen size={30} />
-// 							<p>General</p>
-// 						</div>
-// 					</div>
-// 				</Card>
-// 			</div>
-// 		</Link>
-// 	);
-// };
-
 export default RoomsContainer;
+
+interface RoomCardProps {
+	room: Room;
+}
+
+function RoomCard({ room }: RoomCardProps) {
+	return (
+		<div>
+			<Card className="p-5 hover:border-black cursor-pointer bg-white flex flex-col gap-2">
+				<h3 className="font-bold text-2xl">{room.name}</h3>
+				<div className="flex gap-8">
+					<div className="flex items-center gap-2">
+						<Users size={30} />
+						<p>
+							{room.users.length}/{room.capacity}
+						</p>
+					</div>
+					<div className="flex items-center gap-2">
+						<BookOpen size={30} />
+						<p>{room.theme}</p>
+					</div>
+				</div>
+			</Card>
+		</div>
+	);
+}

@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
 import { Server, Socket } from 'socket.io';
 import logger from './utils/logger';
-import { Message } from './types';
+import { Message, Room } from './types';
 
 const EVENTS = {
 	connection: 'connection',
@@ -14,6 +14,7 @@ const EVENTS = {
 	},
 	SERVER: {
 		ROOMS: 'ROOMS',
+		CREATED_ROOM: 'CREATED_ROOM',
 		JOINED_ROOM: 'JOINED_ROOM',
 		LEFT_ROOM: 'LEFT_ROOM',
 		ROOM_MESSAGE: 'ROOM_MESSAGE',
@@ -21,7 +22,8 @@ const EVENTS = {
 	}
 };
 
-const rooms: Record<string, { name: string }> = {};
+/** Object access is more efficient than arrays. eg: `const room = rooms[key]`*/
+const rooms: Record<string, Room> = {};
 
 function socket({ io }: { io: Server }) {
 	logger.info(`Sockets enabled`);
@@ -32,27 +34,25 @@ function socket({ io }: { io: Server }) {
 		socket.emit(EVENTS.SERVER.ROOMS, rooms);
 
 		// on room created
-		socket.on(EVENTS.CLIENT.CREATE_ROOM, ({ roomName }) => {
-			console.log({ roomName });
-			// create a roomId
-			const roomId = nanoid();
-			// add a new room to the rooms object
-			rooms[roomId] = {
-				name: roomName
+		socket.on(EVENTS.CLIENT.CREATE_ROOM, ({ name, capacity, theme }) => {
+			logger.info(`User ${socket.id} created room: ${name}`);
+
+			// Add a new room to the rooms object (key = 4-char nanoid)
+			rooms[nanoid(4)] = {
+				name,
+				users: [],
+				capacity,
+				theme
 			};
 
-			socket.join(roomId);
-
-			// broadcast an event saying there is a new room
+			// emit new room list to all but client
 			socket.broadcast.emit(EVENTS.SERVER.ROOMS, rooms);
 
-			// emit back to the room creator with all the rooms
+			// emit new room list to the client
 			socket.emit(EVENTS.SERVER.ROOMS, rooms);
-			// emit event back the room creator saying they have joined a room
-			socket.emit(EVENTS.SERVER.JOINED_ROOM, roomId);
 		});
 
-		/** When a user sends a room message */
+		// on user message send
 		socket.on(
 			EVENTS.CLIENT.SEND_ROOM_MESSAGE,
 			({ roomId, content, username }) => {
@@ -74,14 +74,17 @@ function socket({ io }: { io: Server }) {
 		socket.on(EVENTS.CLIENT.JOIN_ROOM, (roomId, username) => {
 			socket.join(roomId);
 			socket.emit(EVENTS.SERVER.JOINED_ROOM, roomId);
+			rooms[roomId].users.push(socket.id);
 
 			// announce connection
-			socket.to(roomId).emit(EVENTS.SERVER.ROOM_MESSAGE, {
+			const joinMessage: Message = {
 				type: 'status',
 				content: 'joined',
 				username,
 				time: Date.now()
-			} as Message);
+			};
+			socket.to(roomId).emit(EVENTS.SERVER.ROOM_MESSAGE, joinMessage);
+			socket.emit(EVENTS.SERVER.ROOM_MESSAGE, joinMessage);
 
 			// on disconnect
 			socket.on('disconnect', () => {
@@ -93,7 +96,8 @@ function socket({ io }: { io: Server }) {
 					time: Date.now()
 				} as Message);
 
-				socket.leave(roomId);
+				const userIndex = rooms[roomId].users.indexOf(socket.id);
+				if (userIndex > -1) rooms[roomId].users.splice(userIndex, 1);
 			});
 		});
 	});

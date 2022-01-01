@@ -17,7 +17,7 @@ export default function Home() {
 			<Meta description={'An online drawing game'} />
 
 			<div className="h-screen flex justify-center items-center">
-				<div className="p-10 flex flex-col gap-8 max-w-xl w-full">
+				<div className="p-2 flex flex-col gap-8 max-w-xl w-full">
 					<Menu />
 
 					{/* <div className="w-full flex justify-center">

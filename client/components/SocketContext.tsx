@@ -9,6 +9,18 @@ export interface Message {
 	time: number;
 	username: string;
 }
+
+export interface Room {
+	name: string;
+	users: string[];
+	capacity: number;
+	theme: string;
+}
+
+export interface RoomsRecords {
+	[key: string]: Room;
+}
+
 export interface Context {
 	socket: Socket;
 	username?: string;
@@ -16,7 +28,7 @@ export interface Context {
 	messages?: Message[];
 	setMessages: Function;
 	roomId?: string;
-	rooms: object;
+	rooms: RoomsRecords;
 }
 
 const socket = io(SOCKET_URL);
@@ -31,7 +43,7 @@ const SocketContext = createContext<Context>({
 const SocketProvider: FC = (props) => {
 	const [username, setUsername] = useState<string>('');
 	const [roomId, setRoomId] = useState<string>('');
-	const [rooms, setRooms] = useState<object>({});
+	const [rooms, setRooms] = useState<RoomsRecords>({});
 	const [messages, setMessages] = useState<Message[]>([]);
 
 	socket.on(EVENTS.SERVER.ROOMS, (value) => {
@@ -47,6 +59,8 @@ const SocketProvider: FC = (props) => {
 		setRoomId(value);
 		setMessages([]);
 	});
+
+	socket.on('disconnect', () => console.log('disconnected'));
 
 	useEffect(() => {
 		socket.on(EVENTS.SERVER.ROOM_MESSAGE, (message: Message) => {

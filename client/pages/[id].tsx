@@ -1,10 +1,4 @@
 import { useRouter } from 'next/router';
-import supabase, {
-	useStore,
-	addMessage,
-	UserContext,
-	Message
-} from '../lib/supabase';
 import { useContext, useEffect, useRef } from 'react';
 import Canvas from '../components/Canvas';
 import { User } from '@supabase/supabase-js';
@@ -12,15 +6,23 @@ import Chat from '../components/Chat';
 import { useSockets } from '../components/SocketContext';
 import EVENTS from '../config/events';
 import { Meta } from '../components/Meta';
-import { deflateRaw } from 'zlib';
+import { useAuth } from '../components/AuthContext';
 
 export default function RoomPage() {
 	const router = useRouter();
-	// const user = useContext(UserContext);
-	const { socket, username } = useSockets();
+	const { profile } = useAuth();
+	const { socket, username, roomId } = useSockets();
 
 	// Else load up the page
 	const { id } = router.query;
+	// useEffect(() => {
+	// 	if (!profile) {
+	// 		router.push('/');
+	// 		return;
+	// 	}
+	// 	if (roomId !== id)
+	// 		socket.emit(EVENTS.CLIENT.JOIN_ROOM, roomId, profile.username);
+	// }, [roomId]);
 
 	return (
 		<>

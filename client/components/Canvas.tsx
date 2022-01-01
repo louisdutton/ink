@@ -57,7 +57,7 @@ export default function Canvas() {
 	};
 
 	// subscribe draw function to socket event
-	socket.on(EVENTS.SERVER.ROOM_DATA, draw);
+	socket.on(EVENTS.SERVER.ROOM_DATA, (data) => draw(data));
 
 	const handlePointerMove = (e: PointerEvent<HTMLCanvasElement>) => {
 		const x = e.nativeEvent.offsetX;
@@ -76,7 +76,7 @@ export default function Canvas() {
 			py: position[1],
 			x,
 			y,
-			roomId: ''
+			roomId: roomId ?? ''
 		};
 
 		// draw locally

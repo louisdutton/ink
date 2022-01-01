@@ -25,7 +25,6 @@ export default function MessageInput({ action, disabled }: Props) {
 				placeholder="Enter message"
 				ref={message}
 				autoComplete="off"
-				// onChange={(e) => setFormValue(e.target.value)}
 				className="px-4 py-2 outline-none transition-colors group border-2 rounded
       placeholder:text-neutral-400
       hover:border-black
