@@ -1,18 +1,23 @@
 import { nanoid } from 'nanoid';
 import { Server, Socket } from 'socket.io';
 import logger from './utils/logger';
+import { Message } from './types';
 
 const EVENTS = {
 	connection: 'connection',
 	CLIENT: {
 		CREATE_ROOM: 'CREATE_ROOM',
 		SEND_ROOM_MESSAGE: 'SEND_ROOM_MESSAGE',
-		JOIN_ROOM: 'JOIN_ROOM'
+		SEND_ROOM_DATA: 'SEND_ROOM_DATA',
+		JOIN_ROOM: 'JOIN_ROOM',
+		LEAVE_ROOM: 'LEAVE_ROOM'
 	},
 	SERVER: {
 		ROOMS: 'ROOMS',
 		JOINED_ROOM: 'JOINED_ROOM',
-		ROOM_MESSAGE: 'ROOM_MESSAGE'
+		LEFT_ROOM: 'LEFT_ROOM',
+		ROOM_MESSAGE: 'ROOM_MESSAGE',
+		ROOM_DATA: 'SEND_ROOM_DATA'
 	}
 };
 
@@ -26,9 +31,7 @@ function socket({ io }: { io: Server }) {
 
 		socket.emit(EVENTS.SERVER.ROOMS, rooms);
 
-		/*
-		 * When a user creates a new room
-		 */
+		// on room created
 		socket.on(EVENTS.CLIENT.CREATE_ROOM, ({ roomName }) => {
 			console.log({ roomName });
 			// create a roomId
@@ -52,22 +55,46 @@ function socket({ io }: { io: Server }) {
 		/** When a user sends a room message */
 		socket.on(
 			EVENTS.CLIENT.SEND_ROOM_MESSAGE,
-			({ roomId, message, username }) => {
-				const date = new Date();
-
+			({ roomId, content, username }) => {
 				socket.to(roomId).emit(EVENTS.SERVER.ROOM_MESSAGE, {
-					message,
+					type: 'message',
+					content,
 					username,
-					time: `${date.getHours()}:${date.getMinutes()}`
-				});
+					time: Date.now()
+				} as Message);
 			}
 		);
 
-		/** When a user joins a room */
-		socket.on(EVENTS.CLIENT.JOIN_ROOM, (roomId) => {
-			socket.join(roomId);
+		// on draw data recieved
+		socket.on(EVENTS.CLIENT.SEND_ROOM_DATA, (data) => {
+			socket.to(data.roomId).emit(EVENTS.SERVER.ROOM_DATA, data);
+		});
 
+		// on room connection
+		socket.on(EVENTS.CLIENT.JOIN_ROOM, (roomId, username) => {
+			socket.join(roomId);
 			socket.emit(EVENTS.SERVER.JOINED_ROOM, roomId);
+
+			// announce connection
+			socket.to(roomId).emit(EVENTS.SERVER.ROOM_MESSAGE, {
+				type: 'status',
+				content: 'joined',
+				username,
+				time: Date.now()
+			} as Message);
+
+			// on disconnect
+			socket.on('disconnect', () => {
+				// announce disconnection
+				socket.to(roomId).emit(EVENTS.SERVER.ROOM_MESSAGE, {
+					type: 'status',
+					content: 'left',
+					username,
+					time: Date.now()
+				} as Message);
+
+				socket.leave(roomId);
+			});
 		});
 	});
 }

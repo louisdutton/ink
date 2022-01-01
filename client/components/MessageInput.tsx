@@ -2,9 +2,10 @@ import { FormEvent, useRef } from 'react';
 
 type Props = {
 	action: (content: string) => Promise<void>;
+	disabled: boolean;
 };
 
-export default function MessageInput({ action }: Props) {
+export default function MessageInput({ action, disabled }: Props) {
 	const message = useRef<HTMLInputElement>(null);
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -18,6 +19,7 @@ export default function MessageInput({ action }: Props) {
 	return (
 		<form onSubmit={handleSubmit}>
 			<input
+				disabled={disabled}
 				id="message"
 				type="text"
 				placeholder="Enter message"

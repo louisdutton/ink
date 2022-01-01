@@ -1,20 +1,14 @@
 import { UserCircle, Bell } from 'phosphor-react';
 import Image from 'next/image';
-import supabase, { fetchProfile, Profile, UserContext } from '../lib/supabase';
-import { useContext, useEffect, useState } from 'react';
+import supabase from '../lib/supabase';
+import { useAuth } from './AuthContext';
 
 export default function Navigation() {
-	const [profile, setProfile] = useState<Profile>();
-	const user = useContext(UserContext);
+	const { user, profile } = useAuth();
 
-	useEffect(() => {
-		if (!user) return;
-		fetchProfile(user).then((data) => {
-			if (data) setProfile(data);
-		});
-	}, [user]);
+	if (!profile) return <div />;
 
-	return profile ? (
+	return (
 		<nav className={`h-full flex relative items-center gap-3`}>
 			<p className="font-bold">{profile.username}</p>
 			<Bell size={30} weight="duotone" />
@@ -24,8 +18,6 @@ export default function Navigation() {
 				onClick={() => supabase.auth.signOut()}
 			/>
 		</nav>
-	) : (
-		<div />
 	);
 }
 

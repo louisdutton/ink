@@ -39,18 +39,16 @@ export function Meta({
 	const fullURL = slug ? baseURL + slug + '/' : baseURL;
 
 	return (
-		<>
-			<Head>
-				<title>{fullTitle}</title>
-				<meta name="viewport" content="width=device-width,initial-scale=1" />
-				<meta property="og:title" content={title} />
-				<meta property="og:type" content={type} />
-				<meta property="og:image" content="/og_image.jpg" />
-				<meta property="og:url" content={fullURL} />
-				<meta name="twitter:card" content={description} />
-				<link rel="canonical" href={fullURL} />
-				<link rel="icon" href="/favicon.ico" />
-			</Head>
-		</>
+		<Head>
+			<title>{fullTitle}</title>
+			<meta name="viewport" content="width=device-width,initial-scale=1" />
+			<meta property="og:title" content={title} />
+			<meta property="og:type" content={type} />
+			<meta property="og:image" content="/og_image.jpg" />
+			<meta property="og:url" content={fullURL} />
+			<meta name="twitter:card" content={description} />
+			<link rel="canonical" href={fullURL} />
+			<link rel="icon" href="/favicon.ico" />
+		</Head>
 	);
 }

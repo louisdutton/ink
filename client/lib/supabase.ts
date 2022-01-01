@@ -208,8 +208,4 @@ export async function fetchProfile(user: User) {
 	return data;
 }
 
-// Users || Auth
-
-export const UserContext = createContext<User | null>(null);
-
 export default supabase;

@@ -1,15 +1,17 @@
-import { ChangeEventHandler } from 'react';
+import { ChangeEventHandler, LegacyRef } from 'react';
 
 type Props = {
 	label: string;
 	noLabel?: boolean;
 	onChange?: ChangeEventHandler<HTMLInputElement>;
+	ref?: LegacyRef<HTMLInputElement>;
 	value?: string | number | readonly string[];
 };
 
 export default function Input({
 	label,
 	noLabel = false,
+	ref = null,
 	value,
 	onChange
 }: Props) {
@@ -22,6 +24,7 @@ export default function Input({
 			)}
 			<input
 				id={label}
+				ref={ref}
 				value={value}
 				onChange={onChange}
 				type="text"
