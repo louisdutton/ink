@@ -1,6 +1,5 @@
 import { createContext, useContext, FC, useState, useEffect } from 'react';
 import io, { Socket } from 'socket.io-client';
-import { SOCKET_URL } from '../config/default';
 import EVENTS from '../config/events';
 
 export interface Message {
@@ -31,7 +30,11 @@ export interface Context {
 	rooms: RoomsRecords;
 }
 
-const socket = io(SOCKET_URL);
+const url =
+	process.env.NODE_ENV === 'development'
+		? 'http://localhost:4000'
+		: 'https://draw-dot-ink.herokuapp.com:4000';
+const socket = io(url);
 const SocketContext = createContext<Context>({
 	socket,
 	setUsername: () => false,
