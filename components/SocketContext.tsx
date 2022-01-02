@@ -32,7 +32,7 @@ export interface Context {
 
 const url =
 	process.env.NODE_ENV === 'development'
-		? 'http://localhost:4000'
+		? 'http://localhost:8000'
 		: 'https://draw-dot-ink.herokuapp.com';
 
 // const url = 'https://draw-dot-ink.herokuapp.com';
@@ -68,10 +68,12 @@ const SocketProvider: FC = (props) => {
 	socket.on('disconnect', () => console.log('disconnected'));
 
 	useEffect(() => {
+		console.log(socket);
+
 		socket.on(EVENTS.SERVER.ROOM_MESSAGE, (message: Message) => {
 			setMessages((messages) => [...messages, message]);
 		});
-	}, [socket]);
+	}, [socket.connected]);
 
 	return (
 		<SocketContext.Provider
