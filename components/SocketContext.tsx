@@ -33,7 +33,9 @@ export interface Context {
 const url =
 	process.env.NODE_ENV === 'development'
 		? 'http://localhost:4000'
-		: 'https://draw-dot-ink.herokuapp.com:4000';
+		: 'https://draw-dot-ink.herokuapp.com';
+
+// const url = 'https://draw-dot-ink.herokuapp.com';
 const socket = io(url);
 const SocketContext = createContext<Context>({
 	socket,
