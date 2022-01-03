@@ -56,9 +56,6 @@ export default function Canvas() {
 		}
 	};
 
-	// subscribe draw function to socket event
-	socket.on(EVENTS.SERVER.ROOM_DATA, (data) => draw(data));
-
 	const handlePointerMove = (e: PointerEvent<HTMLCanvasElement>) => {
 		const x = e.nativeEvent.offsetX;
 		const y = e.nativeEvent.offsetY;
@@ -87,6 +84,8 @@ export default function Canvas() {
 		if (roomId) socket.emit(EVENTS.CLIENT.SEND_ROOM_DATA, drawData);
 	};
 
+	const handlePointerUp = () => setDrawing(false);
+
 	useEffect(() => {
 		if (!ref.current) return;
 
@@ -106,6 +105,17 @@ export default function Canvas() {
 		ctx.lineWidth = 5;
 		ctx.lineCap = 'round';
 		ctx.lineJoin = 'round';
+
+		// subscribe draw function to socket event
+		socket.on(EVENTS.SERVER.ROOM_DATA, draw);
+
+		// global pointer up event so it works outside of canvas
+		window.addEventListener('pointerup', handlePointerUp);
+
+		return () => {
+			socket.off(EVENTS.SERVER.ROOM_DATA, draw);
+			window.removeEventListener('pointerup', handlePointerUp);
+		};
 	}, []);
 
 	// const handleKeyPress = (e: KeyboardEvent) => {
@@ -139,13 +149,14 @@ export default function Canvas() {
 			{/* <div className="border border-black h-4 w-4" /> */}
 			<canvas
 				ref={ref}
-				className="border-t-2 sm:border-2 sm:rounded-t-xl !border-b-0 cursor-cell"
+				className="sm:rounded-t-xl !border-b-0 cursor-cell bg-white shadow-lg"
 				onPointerMove={(e) => handlePointerMove(e)}
 				onPointerDown={(e) => setDrawing(true)}
 				onPointerUp={(e) => setDrawing(false)}
+				onPointerLeave={(e) => setDrawing(false)}
 				// onKeyDown={(e) => handleKeyDown(e)}
 			/>
-			<div className="border-2 rounded-b-xl py-3 flex flex-col sm:flex-row gap-4 items-center justify-evenly">
+			<div className="z-50 border-t rounded-b-xl bg-neutral-100 shadow-lg py-3 flex flex-col sm:flex-row gap-4 items-center justify-evenly">
 				<Palette setColor={(col) => setColor(col)} />
 				<List<Icon>
 					items={tools}
@@ -154,7 +165,7 @@ export default function Canvas() {
 							<Tool size={30} weight="duotone" />
 						</IconButton>
 					)}
-					className="flex gap-1"
+					className="flex gap-2"
 				/>
 			</div>
 		</div>

@@ -12,10 +12,12 @@ export default function IconButton({
 	active = false,
 	...props
 }: Props) {
-	const activeStyle = active ? '!border-black pointer pointer-events-none' : '';
+	const activeStyle = active
+		? 'bg-neutral-200 shadow-inner'
+		: 'shadow bg-neutral-50';
 	return (
 		<button
-			className={`flex justify-center items-center border-2 rounded p-2 hover:border-black ${activeStyle} transition-colors  ${className}`}
+			className={`flex justify-center items-center text-neutral-500 hover:text-black rounded-lg p-2 ${activeStyle} ${className}`}
 			onClick={onClick}
 			{...props}>
 			{children}

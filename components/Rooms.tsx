@@ -30,18 +30,16 @@ function RoomsContainer() {
 		} as Room);
 	}
 
-	// useEffect(() => {
-	// 	if (roomId) {
-	// 		router.push(roomId);
-	// 	}
-	// }, [roomId]);
+	useEffect(() => {
+		console.log(roomId);
+		if (roomId) router.push(roomId);
+	}, [roomId]);
 
 	function handleJoinRoom(key: string) {
 		console.log(roomId, key);
 
 		if (!profile) return;
 		socket.emit(EVENTS.CLIENT.JOIN_ROOM, key, profile.username);
-		router.push(key);
 	}
 
 	return (

@@ -14,7 +14,7 @@ export default function Button({
 }: Props) {
 	return (
 		<button
-			className="px-4 py-2 rounded font-semibold tracking-wide bg-black hover:bg-white text-white hover:text-black border-2 border-black transition-colors duration-200 select-none"
+			className="px-4 py-2 rounded font-semibold tracking-wide bg-black hover:bg-white text-white hover:text-black border-2 border-black transition-colors duration-200 select-none flex justify-center items-center gap-4"
 			onClick={onClick}
 			{...props}>
 			{children}

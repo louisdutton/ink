@@ -32,7 +32,7 @@ export default function Chat() {
 	if (!roomId) return <div />;
 
 	return (
-		<div className="w-60 hidden sm:flex flex-col justify-end gap-4 px-4">
+		<div className="w-60 hidden sm:flex flex-col justify-end gap-4">
 			<MessageFeed messages={messages} />
 			<MessageInput action={sendMessage} disabled={!profile} />
 		</div>

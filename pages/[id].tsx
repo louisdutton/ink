@@ -25,7 +25,7 @@ export default function RoomPage() {
 	// }, [roomId]);
 
 	return (
-		<>
+		<div className="bg-neutral-100">
 			<Meta description="playing with friends" />
 			<div className="h-screen flex items-center">
 				<div className="w-screen flex justify-evenly flex-col sm:flex-row">
@@ -39,7 +39,7 @@ export default function RoomPage() {
 					<Chat />
 				</div>
 			</div>
-		</>
+		</div>
 	);
 }
 

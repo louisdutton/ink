@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { createContext, useContext, FC, useState, useEffect } from 'react';
 import io, { Socket } from 'socket.io-client';
 import EVENTS from '../config/events';
@@ -46,34 +47,33 @@ const SocketContext = createContext<Context>({
 });
 
 const SocketProvider: FC = (props) => {
+	const router = useRouter();
 	const [username, setUsername] = useState<string>('');
 	const [roomId, setRoomId] = useState<string>('');
 	const [rooms, setRooms] = useState<RoomsRecords>({});
 	const [messages, setMessages] = useState<Message[]>([]);
 
-	socket.on(EVENTS.SERVER.ROOMS, (value) => {
-		setRooms(value);
-	});
-
-	socket.on(EVENTS.SERVER.JOINED_ROOM, (value) => {
-		setRoomId(value);
-		setMessages([]);
-	});
-
-	socket.on(EVENTS.SERVER.JOINED_ROOM, (value) => {
-		setRoomId(value);
-		setMessages([]);
-	});
-
-	socket.on('disconnect', () => console.log('disconnected'));
-
 	useEffect(() => {
-		console.log(socket);
-
+		socket.on('disconnect', () => {
+			socket.removeAllListeners();
+			router.push('/');
+			console.log('disconnected');
+		});
+		socket.on(EVENTS.SERVER.ROOMS, (value) => setRooms(value));
+		socket.on(EVENTS.SERVER.JOINED_ROOM, (value) => {
+			setRoomId(value);
+			setMessages([]);
+		});
 		socket.on(EVENTS.SERVER.ROOM_MESSAGE, (message: Message) => {
 			setMessages((messages) => [...messages, message]);
 		});
-	}, [socket.connected]);
+
+		return () => {
+			socket.off(EVENTS.SERVER.ROOMS);
+			socket.off(EVENTS.SERVER.JOINED_ROOM);
+			socket.off(EVENTS.SERVER.ROOM_MESSAGE);
+		};
+	}, [socket]);
 
 	return (
 		<SocketContext.Provider

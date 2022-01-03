@@ -13,18 +13,12 @@ import { useAuth } from '../components/AuthContext';
 
 export default function Home() {
 	return (
-		<div className="w-full">
+		<div className="w-full bg-neutral-100">
 			<Meta description={'An online drawing game'} />
 
 			<div className="h-screen flex justify-center items-center">
 				<div className="p-2 flex flex-col gap-8 max-w-xl w-full">
 					<Menu />
-
-					{/* <div className="w-full flex justify-center">
-						<Link href="/game" passHref>
-							<Button>Play</Button>
-						</Link>
-					</div> */}
 				</div>
 			</div>
 		</div>
@@ -33,15 +27,5 @@ export default function Home() {
 
 function Menu() {
 	const { user } = useAuth();
-
-	if (user) return <RoomsContainer />;
-	return (
-		<>
-			<div className="flex items-center gap-4 justify-center">
-				<Drop size={100} weight="fill" />
-				<h1 className="font-bold text-8xl">draw.ink</h1>
-			</div>
-			<SignIn />
-		</>
-	);
+	return user ? <RoomsContainer /> : <SignIn />;
 }
