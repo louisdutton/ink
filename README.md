@@ -1,3 +1,3 @@
-## draw.ink
+## Ink Client
 
-An online multiplayer drawing game.
+Built with NextJS, Typescript and TailwindCSS.
