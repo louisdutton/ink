@@ -152,8 +152,6 @@ export default function Canvas() {
 				className="sm:rounded-t-xl !border-b-0 cursor-cell bg-white shadow-lg"
 				onPointerMove={(e) => handlePointerMove(e)}
 				onPointerDown={(e) => setDrawing(true)}
-				onPointerUp={(e) => setDrawing(false)}
-				onPointerLeave={(e) => setDrawing(false)}
 				// onKeyDown={(e) => handleKeyDown(e)}
 			/>
 			<div className="z-50 border-t rounded-b-xl bg-neutral-100 shadow-lg py-3 flex flex-col sm:flex-row gap-4 items-center justify-evenly">
