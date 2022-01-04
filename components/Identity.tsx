@@ -5,8 +5,10 @@ export default function Identity() {
 	return (
 		<Link href="/" passHref>
 			<div className="flex items-center gap-2 cursor-pointer">
-				<Drop size={24} weight="fill" />
-				<p className="text-2xl font-bold rounded-lg border-black">draw.ink</p>
+				<Drop size={30} weight="fill" />
+				<p className="text-3xl font-bold rounded-lg border-black font-cursive">
+					Ink
+				</p>
 			</div>
 		</Link>
 	);
