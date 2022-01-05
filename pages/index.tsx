@@ -4,7 +4,6 @@ import { Meta } from '../components/Meta';
 import Button from '../components/Button';
 import SignIn from '../components/Auth';
 import { Drop, Users, BookOpen } from 'phosphor-react';
-import { fetchRooms, Room, useStore } from '../lib/supabase';
 import { useContext, useEffect, useState } from 'react';
 import List from '../components/List';
 import Card from '../components/Card';
@@ -18,7 +17,8 @@ export default function Home() {
 
 			<div className="h-screen flex justify-center items-center">
 				<div className="p-2 flex flex-col gap-8 max-w-xl w-full">
-					<Menu />
+					<RoomsContainer />
+					{/* <Menu /> */}
 				</div>
 			</div>
 		</div>

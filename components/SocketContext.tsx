@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { createContext, useContext, FC, useState, useEffect } from 'react';
 import io, { Socket } from 'socket.io-client';
-import EVENTS from '../config/events';
+import EVENTS from '../server/events';
 
 export interface Message {
 	type: 'status' | 'message';
@@ -33,8 +33,8 @@ export interface Context {
 
 const url =
 	process.env.NODE_ENV === 'development'
-		? 'http://localhost:8000'
-		: 'https://draw-dot-ink.herokuapp.com';
+		? 'http://localhost:3000'
+		: 'https://draw.ink';
 
 // const url = 'https://draw-dot-ink.herokuapp.com';
 const socket = io(url);
@@ -60,18 +60,18 @@ const SocketProvider: FC = (props) => {
 			console.log('disconnected');
 		});
 		socket.on(EVENTS.SERVER.ROOMS, (value) => setRooms(value));
-		socket.on(EVENTS.SERVER.JOINED_ROOM, (value) => {
+		socket.on(EVENTS.SERVER.ROOM_JOIN, (value) => {
 			setRoomId(value);
 			setMessages([]);
 		});
-		socket.on(EVENTS.SERVER.ROOM_MESSAGE, (message: Message) => {
+		socket.on(EVENTS.SERVER.MESSAGE, (message: Message) => {
 			setMessages((messages) => [...messages, message]);
 		});
 
 		return () => {
 			socket.off(EVENTS.SERVER.ROOMS);
-			socket.off(EVENTS.SERVER.JOINED_ROOM);
-			socket.off(EVENTS.SERVER.ROOM_MESSAGE);
+			socket.off(EVENTS.SERVER.ROOM_JOIN);
+			socket.off(EVENTS.SERVER.MESSAGE);
 		};
 	}, [socket]);
 

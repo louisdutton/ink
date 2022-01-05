@@ -5,7 +5,7 @@ import IconButton from './IconButton';
 import { PenTool, EraserTool } from '../lib/tools';
 import { Pen, Eraser, PaintBucket, Rectangle, IconProps } from 'phosphor-react';
 import { useSockets } from './SocketContext';
-import EVENTS from '../config/events';
+import EVENTS from '../server/events';
 
 type Icon = React.ForwardRefExoticComponent<
 	IconProps & React.RefAttributes<SVGSVGElement>
@@ -81,7 +81,7 @@ export default function Canvas() {
 		setPosition([x, y]);
 
 		// broadcast draw data
-		if (roomId) socket.emit(EVENTS.CLIENT.SEND_ROOM_DATA, drawData);
+		if (roomId) socket.emit(EVENTS.CLIENT.DRAW, drawData);
 	};
 
 	const handlePointerUp = () => setDrawing(false);
@@ -107,13 +107,13 @@ export default function Canvas() {
 		ctx.lineJoin = 'round';
 
 		// subscribe draw function to socket event
-		socket.on(EVENTS.SERVER.ROOM_DATA, draw);
+		socket.on(EVENTS.SERVER.DRAW, draw);
 
 		// global pointer up event so it works outside of canvas
 		window.addEventListener('pointerup', handlePointerUp);
 
 		return () => {
-			socket.off(EVENTS.SERVER.ROOM_DATA, draw);
+			socket.off(EVENTS.SERVER.DRAW, draw);
 			window.removeEventListener('pointerup', handlePointerUp);
 		};
 	}, []);

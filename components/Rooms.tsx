@@ -4,7 +4,7 @@ import Button from './Button';
 import List from './List';
 import { Room, useSockets } from './SocketContext';
 import { BookOpen, Users } from 'phosphor-react';
-import EVENTS from '../config/events';
+import EVENTS from '../server/events';
 import { useRouter } from 'next/router';
 import { useAuth } from './AuthContext';
 import Card from './Card';
@@ -13,34 +13,36 @@ function RoomsContainer() {
 	const router = useRouter();
 	const { socket, roomId, rooms } = useSockets();
 	const newRoomRef = useRef<HTMLInputElement>(null);
-	const { profile } = useAuth();
 
-	function handleCreateRoom() {
-		if (!profile) return;
-
+	const createRoom = () => {
 		// validate room name
 		const name = newRoomRef.current?.value || '';
 		if (!name.trim()) return;
 
 		// emit room created event
-		socket.emit(EVENTS.CLIENT.CREATE_ROOM, {
+		const room: Room = {
 			name,
+			users: [],
 			capacity: 8,
 			theme: 'General'
-		} as Room);
-	}
+		};
 
-	useEffect(() => {
-		console.log(roomId);
-		if (roomId) router.push(roomId);
-	}, [roomId]);
+		socket.emit(EVENTS.CLIENT.ROOM_CREATE, room, (id: string) => {
+			console.log(`Successfully created room: ${id}`);
+			joinRoom(id);
+		});
+	};
 
-	function handleJoinRoom(key: string) {
-		console.log(roomId, key);
+	const joinRoom = (id: string) => {
+		socket.emit(EVENTS.CLIENT.ROOM_JOIN, { id, username: 'user' }, () =>
+			router.push('/' + id)
+		);
+	};
 
-		if (!profile) return;
-		socket.emit(EVENTS.CLIENT.JOIN_ROOM, key, profile.username);
-	}
+	// useEffect(() => {
+	// 	console.log(roomId);
+	// 	if (roomId) router.push(roomId);
+	// }, [roomId]);
 
 	return (
 		<nav className="">
@@ -54,12 +56,12 @@ function RoomsContainer() {
 						placeholder="Enter room name"
 						className="border-2 rounded px-4 py-2 flex-1 hover:border-black outline-none transition-colors focus:border-black focus:bg-neutral-100"
 					/>
-					<Button onClick={handleCreateRoom}>Create Room</Button>
+					<Button onClick={createRoom}>Create Room</Button>
 				</div>
 				<List<string>
 					items={Object.keys(rooms)}
 					render={(key: string) => (
-						<div key={key} onClick={() => handleJoinRoom(key)}>
+						<div key={key} onClick={() => joinRoom(key)}>
 							<RoomCard room={rooms[key]} />
 						</div>
 					)}
