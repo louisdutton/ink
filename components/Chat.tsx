@@ -3,11 +3,9 @@ import { useSockets, Message } from './SocketContext';
 import EVENTS from '../server/events';
 import MessageFeed from './MessageFeed';
 import MessageInput from './MessageInput';
-import { useAuth } from './AuthContext';
 
 export default function Chat() {
-	const { socket, messages, roomId, setMessages } = useSockets();
-	// const { profile } = useAuth();
+	const { socket, messages, roomId, username } = useSockets();
 
 	const sendMessage = async (content: string) => {
 		if (!String(content).trim() || !messages) return;
@@ -16,17 +14,8 @@ export default function Chat() {
 			roomId,
 			type: 'message',
 			content,
-			username: 'username'
+			username
 		});
-
-		const message: Message = {
-			type: 'message',
-			username: 'You',
-			content,
-			time: Date.now()
-		};
-
-		setMessages([...messages, message]);
 	};
 
 	if (!roomId) return <div />;

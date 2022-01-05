@@ -1,3 +1,7 @@
+import Filter from 'bad-words';
+
+// Profanity filter
+const filter = new Filter();
 export interface Message {
 	type: 'status' | 'message';
 	content: string;
@@ -7,7 +11,7 @@ export interface Message {
 
 const message = (username: string, content: string): Message => ({
 	type: 'message',
-	content: content,
+	content: filter.clean(content),
 	username,
 	time: Date.now()
 });

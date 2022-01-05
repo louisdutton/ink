@@ -1,9 +1,9 @@
-import { nanoid } from 'nanoid';
 import { Server, Socket } from 'socket.io';
-import rooms, { Room, removeFromRoom } from './rooms';
+import rooms, { Room, removeFromRoom, createRoom } from './rooms';
 import msg from './messages';
 import EV from './events';
 
+/** Initialise the given SocketIO server. */
 function socket(io: Server) {
 	console.log('Websockets are enabled');
 
@@ -14,23 +14,16 @@ function socket(io: Server) {
 
 		// on room created
 		socket.on(EV.CLIENT.ROOM_CREATE, ({ name, capacity, theme }, callback) => {
-			// Add a new room to the rooms object (key = 4-char nanoid)
-			const id = nanoid(4);
-			rooms[id] = {
-				name,
-				users: [],
-				capacity,
-				theme
-			};
+			// Create the room and log it's creation
+			const rid = createRoom(name, capacity, theme);
+			console.log(`${rid} created by ${socket.id}`);
 
-			console.log(`${id} created by ${socket.id}`);
+			// Emit mutated room list to all
+			// socket.broadcast.emit(EV.SERVER.ROOMS, rooms);
+			// socket.emit(EV.SERVER.ROOMS, rooms);
 
-			// emit new room list to all but client
-			socket.broadcast.emit(EV.SERVER.ROOMS, rooms);
-
-			// emit new room list to the client
-			socket.emit(EV.SERVER.ROOMS, rooms);
-			callback(id);
+			// Acknowledgement callback
+			callback({ data: rid });
 		});
 
 		// on room connection
@@ -38,30 +31,33 @@ function socket(io: Server) {
 			// ensure socket does not already exist in room
 			const room = rooms[id];
 
-			// room doesnt exist
+			// Ensure room exists
 			if (!room) {
-				console.log(`room ${id} does not exist on the server`);
+				const error = `Room: ${id} does not exist`;
+				console.log(error);
+				callback({ error });
 				return;
 			}
 
-			// user already in room
+			// Ensure user is not already present in room
 			if (socket.rooms.has(id)) {
-				console.log(`${id} is already present in ${socket.id}`);
+				const error = `User: ${id} already present in Room: ${socket.id}`;
+				console.log(error);
+				callback({ error });
 				return;
 			}
 
-			console.log(`${socket.id} joined ${id}`);
-			// Join room and emit id back to the source socket
+			// Join the room
 			socket.join(id);
-			// socket.emit(EV.SERVER.JOINED_ROOM, socket.id);
+			console.log(`${socket.id} joined ${id}`);
 
-			// add socket to the list of users in the room
+			// Add socket to the room's user list
 			room.users.push(socket.id);
 
-			// emit announcment to all sockets in room (including self)
+			// Emit arrival messages to all sockets in the room (inclusive)
 			socket.to(id).emit(EV.SERVER.MESSAGE, msg.status(username, 'joined'));
 
-			// on disconnect
+			// ON ROOM DISCONNECT
 			socket.on(EV.disconnect, () => {
 				// announce disconnection
 				socket.leave(id);
@@ -72,9 +68,10 @@ function socket(io: Server) {
 				if (userIndex > -1) room.users.splice(userIndex, 1);
 			});
 
-			callback();
+			callback({ data: id });
 		});
 
+		// ON LEAVE ROOM
 		socket.on(EV.CLIENT.ROOM_LEAVE, () => {
 			// leave all rooms
 			socket.rooms.forEach((roomId: string) => {
@@ -84,20 +81,22 @@ function socket(io: Server) {
 				if (rooms[roomId]) removeFromRoom(socket, roomId);
 			});
 
-			console.log(io.sockets.adapter.rooms);
+			// console.log(io.sockets.adapter.rooms);
 			socket.emit(EV.SERVER.ROOMS, rooms);
 		});
 
-		// on user message send
+		// ON MESSAGE
 		socket.on(EV.CLIENT.MESSAGE, ({ roomId, content, username }) => {
+			// Emit message to all sockets in room (inclusive)
 			socket.to(roomId).emit(EV.SERVER.MESSAGE, msg.message(username, content));
 		});
 
-		// on draw data recieved
+		// ON DRAW
 		socket.on(EV.CLIENT.DRAW, (data) => {
 			socket.broadcast.to(data.roomId).emit(EV.SERVER.DRAW, data);
 		});
 
+		// ON DISCONNECT
 		socket.on(EV.disconnect, () => console.log(`${socket.id} disconnected`));
 	});
 }

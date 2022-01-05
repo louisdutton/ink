@@ -27,6 +27,6 @@ nextApp.prepare().then(async () => {
 
 	server.listen(port, () => {
 		console.log(`🚀 Inky winky lets get dinky! 🚀`);
-		console.log(`Server is listening on: https://localhost:${port}`);
+		console.log(`Server is listening on: http://localhost:${port}`);
 	});
 });

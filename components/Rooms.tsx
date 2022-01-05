@@ -1,17 +1,15 @@
 import { useEffect, useRef } from 'react';
-import Link from 'next/link';
 import Button from './Button';
 import List from './List';
 import { Room, useSockets } from './SocketContext';
 import { BookOpen, Users } from 'phosphor-react';
 import EVENTS from '../server/events';
 import { useRouter } from 'next/router';
-import { useAuth } from './AuthContext';
 import Card from './Card';
 
 function RoomsContainer() {
 	const router = useRouter();
-	const { socket, roomId, rooms } = useSockets();
+	const { socket, rooms, joinRoom } = useSockets();
 	const newRoomRef = useRef<HTMLInputElement>(null);
 
 	const createRoom = () => {
@@ -27,16 +25,10 @@ function RoomsContainer() {
 			theme: 'General'
 		};
 
-		socket.emit(EVENTS.CLIENT.ROOM_CREATE, room, (id: string) => {
-			console.log(`Successfully created room: ${id}`);
-			joinRoom(id);
+		socket.emit(EVENTS.CLIENT.ROOM_CREATE, room, ({ data }: any) => {
+			console.log(`Successfully created room: ${data}`);
+			joinRoom(data);
 		});
-	};
-
-	const joinRoom = (id: string) => {
-		socket.emit(EVENTS.CLIENT.ROOM_JOIN, { id, username: 'user' }, () =>
-			router.push('/' + id)
-		);
 	};
 
 	// useEffect(() => {

@@ -23,12 +23,18 @@ export interface RoomsRecords {
 
 export interface Context {
 	socket: Socket;
-	username?: string;
+	username: string;
 	setUsername: Function;
 	messages?: Message[];
 	setMessages: Function;
 	roomId?: string;
 	rooms: RoomsRecords;
+	joinRoom: (id: string) => void;
+}
+
+export interface SocketCallback {
+	data: string;
+	error: string;
 }
 
 const url =
@@ -40,18 +46,32 @@ const url =
 const socket = io(url);
 const SocketContext = createContext<Context>({
 	socket,
+	username: 'user',
 	setUsername: () => false,
 	setMessages: () => false,
+	joinRoom: (id) => {},
 	rooms: {},
 	messages: []
 });
 
 const SocketProvider: FC = (props) => {
 	const router = useRouter();
-	const [username, setUsername] = useState<string>('');
+	const [username, setUsername] = useState<string>('user');
 	const [roomId, setRoomId] = useState<string>('');
 	const [rooms, setRooms] = useState<RoomsRecords>({});
 	const [messages, setMessages] = useState<Message[]>([]);
+
+	const joinRoom = (id: string) => {
+		socket.emit(
+			EVENTS.CLIENT.ROOM_JOIN,
+			{ id, username: 'user' },
+			({ data }: SocketCallback) => {
+				setRoomId(id);
+				setMessages([]);
+				router.push('/' + id);
+			}
+		);
+	};
 
 	useEffect(() => {
 		socket.on('disconnect', () => {
@@ -60,10 +80,10 @@ const SocketProvider: FC = (props) => {
 			console.log('disconnected');
 		});
 		socket.on(EVENTS.SERVER.ROOMS, (value) => setRooms(value));
-		socket.on(EVENTS.SERVER.ROOM_JOIN, (value) => {
-			setRoomId(value);
-			setMessages([]);
-		});
+		// socket.on(EVENTS.SERVER.ROOM_JOIN, (value) => {
+		// 	setRoomId(value);
+		// 	setMessages([]);
+		// });
 		socket.on(EVENTS.SERVER.MESSAGE, (message: Message) => {
 			setMessages((messages) => [...messages, message]);
 		});
@@ -81,6 +101,7 @@ const SocketProvider: FC = (props) => {
 				socket,
 				username,
 				setUsername,
+				joinRoom,
 				rooms,
 				roomId,
 				messages,
