@@ -1,3 +1,4 @@
-## Ink Client
+## Ink
 
-Built with NextJS, Typescript and TailwindCSS.
+Client: NextJS, Typescript and TailwindCSS.
+Server: Custom TS-Node NextJS Server. 
