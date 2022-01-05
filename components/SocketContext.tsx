@@ -34,7 +34,7 @@ export interface Context {
 
 export interface SocketCallback {
 	data: string;
-	error: string;
+	error?: string;
 }
 
 const url =
@@ -65,10 +65,14 @@ const SocketProvider: FC = (props) => {
 		socket.emit(
 			EVENTS.CLIENT.ROOM_JOIN,
 			{ id, username: 'user' },
-			({ data }: SocketCallback) => {
-				setRoomId(id);
-				setMessages([]);
-				router.push('/' + id);
+			({ error, data }: SocketCallback) => {
+				if (error) {
+					console.log(error);
+				} else {
+					setRoomId(id);
+					setMessages([]);
+					router.push('/' + id);
+				}
 			}
 		);
 	};
