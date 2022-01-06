@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, PointerEvent } from 'react';
 import Palette from '../components/Palette';
 import List from './List';
 import IconButton from './IconButton';
-import { PenTool, EraserTool } from '../lib/tools';
+import { PenTool, EraserTool, FillTool } from '../lib/tools';
 import { Pen, Eraser, PaintBucket, Rectangle, IconProps } from 'phosphor-react';
 import { useSockets } from './SocketContext';
 import EVENTS from '../server/events';
@@ -20,6 +20,7 @@ export interface DrawData {
 	tool: Tool;
 	color: string;
 	pressure: number;
+	weight: number;
 }
 
 const dimensions = {
@@ -29,7 +30,8 @@ const dimensions = {
 
 enum Tool {
 	Pen,
-	Eraser
+	Eraser,
+	Fill
 }
 
 export default function Canvas() {
@@ -40,18 +42,19 @@ export default function Canvas() {
 	const [position, setPosition] = useState<[number, number]>();
 	const [color, setColor] = useState('#000000');
 	const { socket, roomId } = useSockets();
-	const tools = [Pen, Eraser];
+	const tools = [Pen, Eraser, PaintBucket];
+	const weightSlider = useRef<HTMLInputElement>(null);
 
 	const draw = (drawData: DrawData) => {
 		if (!ctx) return;
-		const { tool, color, pressure, px, py, x, y } = drawData;
+		const { tool, color, pressure, weight, px, py, x, y } = drawData;
 
 		switch (tool) {
 			case Tool.Pen:
-				PenTool.move(ctx, color, pressure, px, py, x, y);
+				PenTool.move(ctx, color, pressure, weight, px, py, x, y);
 				break;
 			case Tool.Eraser:
-				EraserTool.move(ctx, px, py, x, y);
+				EraserTool.move(ctx, px, py, x, y, weight);
 				break;
 		}
 	};
@@ -60,7 +63,7 @@ export default function Canvas() {
 		const x = e.nativeEvent.offsetX;
 		const y = e.nativeEvent.offsetY;
 
-		if (!drawing || !position || !ctx) {
+		if (!drawing || !position || !ctx || !weightSlider.current) {
 			setPosition([x, y]);
 			return;
 		}
@@ -69,6 +72,7 @@ export default function Canvas() {
 			tool,
 			color,
 			pressure: e.pressure,
+			weight: parseInt(weightSlider.current?.value),
 			px: position[0],
 			py: position[1],
 			x,
@@ -85,6 +89,20 @@ export default function Canvas() {
 	};
 
 	const handlePointerUp = () => setDrawing(false);
+	const handlePointerDown = (e: PointerEvent<HTMLCanvasElement>) => {
+		setDrawing(true);
+
+		if (!ctx) return;
+
+		const x = e.nativeEvent.offsetX;
+		const y = e.nativeEvent.offsetY;
+
+		switch (tool) {
+			case Tool.Fill:
+				FillTool.down(ctx, x, y, color);
+				break;
+		}
+	};
 
 	useEffect(() => {
 		if (!ref.current) return;
@@ -100,6 +118,12 @@ export default function Canvas() {
 		canvas.width = Math.floor(dimensions.width * scale);
 		canvas.height = Math.floor(dimensions.height * scale);
 		ctx.scale(scale, scale);
+		console.log('Canvas Scale: ' + scale);
+
+		// fill white
+		// ctx.imageSmoothingEnabled = true;
+		ctx.fillStyle = '#ffffff';
+		ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
 		// stroke style
 		ctx.lineWidth = 5;
@@ -150,7 +174,7 @@ export default function Canvas() {
 				ref={ref}
 				className="sm:rounded-t-xl !border-b-0 cursor-cell bg-white shadow-lg"
 				onPointerMove={(e) => handlePointerMove(e)}
-				onPointerDown={(e) => setDrawing(true)}
+				onPointerDown={(e) => handlePointerDown(e)}
 				// onKeyDown={(e) => handleKeyDown(e)}
 			/>
 			<div className="z-50 border-t rounded-b-xl bg-neutral-100 shadow-lg py-3 flex flex-col sm:flex-row gap-4 items-center justify-evenly">
@@ -163,6 +187,14 @@ export default function Canvas() {
 						</IconButton>
 					)}
 					className="flex gap-2"
+				/>
+				<input
+					type="range"
+					step={10}
+					max={200}
+					min={10}
+					defaultValue={20}
+					ref={weightSlider}
 				/>
 			</div>
 		</div>
