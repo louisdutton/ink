@@ -146,7 +146,6 @@ export default function Canvas() {
 
 	return (
 		<div className="flex flex-col">
-			{/* <div className="border border-black h-4 w-4" /> */}
 			<canvas
 				ref={ref}
 				className="sm:rounded-t-xl !border-b-0 cursor-cell bg-white shadow-lg"

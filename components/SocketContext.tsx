@@ -65,7 +65,7 @@ const SocketProvider: FC = (props) => {
 		socket.emit(
 			EVENTS.CLIENT.ROOM_JOIN,
 			{ id, username: 'user' },
-			({ error, data }: SocketCallback) => {
+			({ error }: SocketCallback) => {
 				if (error) {
 					console.log(error);
 				} else {

@@ -1,22 +1,12 @@
 import { UserCircle, Bell } from 'phosphor-react';
 import Image from 'next/image';
-import supabase from '../lib/supabase';
-import { useAuth } from './AuthContext';
 
 export default function Navigation() {
-	const { user, profile } = useAuth();
-
-	if (!profile) return <div />;
-
 	return (
 		<nav className={`h-full flex relative items-center gap-3`}>
-			<p className="font-bold">{profile.username}</p>
+			{/* <p className="font-bold">{profile.username}</p> */}
 			<Bell size={30} weight="duotone" />
-			<UserCircle
-				size={30}
-				weight="duotone"
-				onClick={() => supabase.auth.signOut()}
-			/>
+			<UserCircle size={30} weight="duotone" />
 		</nav>
 	);
 }

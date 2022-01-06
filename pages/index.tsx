@@ -8,7 +8,6 @@ import { useContext, useEffect, useState } from 'react';
 import List from '../components/List';
 import Card from '../components/Card';
 import RoomsContainer from '../components/Rooms';
-import { useAuth } from '../components/AuthContext';
 
 export default function Home() {
 	return (
@@ -25,7 +24,7 @@ export default function Home() {
 	);
 }
 
-function Menu() {
-	const { user } = useAuth();
-	return user ? <RoomsContainer /> : <SignIn />;
-}
+// function Menu() {
+// 	const { user } = useAuth();
+// 	return user ? <RoomsContainer /> : <SignIn />;
+// }
