@@ -99,7 +99,7 @@ export default function Canvas() {
 
 		switch (tool) {
 			case Tool.Fill:
-				FillTool.down(ctx, x, y, color);
+				FillTool.down(ctx, x, y, color, window.devicePixelRatio);
 				break;
 		}
 	};
