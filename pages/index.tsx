@@ -11,7 +11,7 @@ import RoomsContainer from '../components/Rooms';
 
 export default function Home() {
 	return (
-		<div className="w-full bg-neutral-100">
+		<div className="w-full bg-neutral-100 dark:bg-transparent">
 			<Meta description={'An online drawing game'} />
 
 			<div className="h-screen flex justify-center items-center">

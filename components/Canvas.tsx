@@ -175,27 +175,32 @@ export default function Canvas() {
 				className="sm:rounded-t-xl !border-b-0 cursor-cell bg-white shadow-lg"
 				onPointerMove={(e) => handlePointerMove(e)}
 				onPointerDown={(e) => handlePointerDown(e)}
+				// onBlur={(e) => setDrawing(false)}
 				// onKeyDown={(e) => handleKeyDown(e)}
 			/>
-			<div className="z-50 border-t rounded-b-xl bg-neutral-100 shadow-lg py-3 flex flex-col sm:flex-row gap-4 items-center justify-evenly">
-				<Palette setColor={(col) => setColor(col)} />
-				<List<Icon>
-					items={tools}
-					render={(Tool, i) => (
-						<IconButton onClick={() => setTool(i)} active={tool === i}>
-							<Tool size={30} weight="duotone" />
-						</IconButton>
-					)}
-					className="flex gap-2"
-				/>
-				<input
-					type="range"
-					step={10}
-					max={200}
-					min={10}
-					defaultValue={20}
-					ref={weightSlider}
-				/>
+			<div className="z-50 flex flex-col border-neutral-700 border-t rounded-b-xl bg-neutral-100 dark:bg-neutral-800 dark:border shadow-lg">
+				<div className="py-3 flex flex-col sm:flex-row gap-4 items-center justify-evenly">
+					<Palette setColor={(col) => setColor(col)} />
+					<List<Icon>
+						items={tools}
+						render={(Tool, i) => (
+							<IconButton onClick={() => setTool(i)} active={tool === i}>
+								<Tool size={30} weight="duotone" />
+							</IconButton>
+						)}
+						className="flex gap-2"
+					/>
+				</div>
+				<div className="p-4 w-full">
+					<input
+						type="range"
+						step={10}
+						max={200}
+						min={10}
+						defaultValue={20}
+						ref={weightSlider}
+					/>
+				</div>
 			</div>
 		</div>
 	);

@@ -6,6 +6,7 @@ import { BookOpen, Users } from 'phosphor-react';
 import EVENTS from '../server/events';
 import { useRouter } from 'next/router';
 import Card from './Card';
+import Input from './Input';
 
 function RoomsContainer() {
 	const router = useRouter();
@@ -43,11 +44,7 @@ function RoomsContainer() {
 					Join or create a room
 				</h1>
 				<div className="flex gap-2 w-full">
-					<input
-						ref={newRoomRef}
-						placeholder="Enter room name"
-						className="border-2 rounded px-4 py-2 flex-1 hover:border-black outline-none transition-colors focus:border-black focus:bg-neutral-100"
-					/>
+					<Input ref={newRoomRef} label="room name" />
 					<Button onClick={createRoom}>Create Room</Button>
 				</div>
 				<List<string>
@@ -72,7 +69,7 @@ interface RoomCardProps {
 function RoomCard({ room }: RoomCardProps) {
 	return (
 		<div>
-			<Card className="p-5 hover:border-black cursor-pointer bg-white flex flex-col gap-2">
+			<Card className="p-5 hover:border-black dark:hover:border-white cursor-pointer flex flex-col gap-2">
 				<h3 className="font-bold text-2xl">{room.name}</h3>
 				<div className="flex gap-8">
 					<div className="flex items-center gap-2">

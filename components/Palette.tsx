@@ -69,11 +69,11 @@ type ColorButtonProps = {
 };
 
 function ColorButton({ color, active = false, onClick }: ColorButtonProps) {
-	const activeStyle = active ? '!border-black' : '';
+	const activeStyle = active ? '!rounded-full' : '';
 	return (
 		<button
 			onClick={() => onClick()}
-			className={`w-10 h-10 rounded-full shadow-md border-4 border-white hover:border-black cursor-pointer transition-all ${color} ${activeStyle}`}
+			className={`w-10 h-10 rounded-full shadow-md hover:border-black cursor-pointer transition-all ${color} ${activeStyle}`}
 		/>
 	);
 }
