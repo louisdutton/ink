@@ -97,7 +97,7 @@ const SocketProvider: FC = (props) => {
 			socket.off(EVENTS.SERVER.ROOM_JOIN);
 			socket.off(EVENTS.SERVER.MESSAGE);
 		};
-	}, [socket]);
+	}, [router]);
 
 	return (
 		<SocketContext.Provider

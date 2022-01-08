@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, PointerEvent } from 'react';
+import { useEffect, useRef, useState, PointerEvent, useCallback } from 'react';
 import Palette from '../components/Palette';
 import List from './List';
 import IconButton from './IconButton';
@@ -45,19 +45,22 @@ export default function Canvas() {
 	const tools = [Pen, Eraser, PaintBucket];
 	const weightSlider = useRef<HTMLInputElement>(null);
 
-	const draw = (drawData: DrawData) => {
-		if (!ctx) return;
-		const { tool, color, pressure, weight, px, py, x, y } = drawData;
+	const draw = useCallback(
+		(drawData: DrawData) => {
+			if (!ctx) return;
+			const { tool, color, pressure, weight, px, py, x, y } = drawData;
 
-		switch (tool) {
-			case Tool.Pen:
-				PenTool.move(ctx, color, pressure, weight, px, py, x, y);
-				break;
-			case Tool.Eraser:
-				EraserTool.move(ctx, px, py, x, y, weight);
-				break;
-		}
-	};
+			switch (tool) {
+				case Tool.Pen:
+					PenTool.move(ctx, color, pressure, weight, px, py, x, y);
+					break;
+				case Tool.Eraser:
+					EraserTool.move(ctx, px, py, x, y, weight);
+					break;
+			}
+		},
+		[ctx]
+	);
 
 	const handlePointerMove = (e: PointerEvent<HTMLCanvasElement>) => {
 		const x = e.nativeEvent.offsetX;
@@ -140,7 +143,7 @@ export default function Canvas() {
 			socket.off(EVENTS.SERVER.DRAW, draw);
 			window.removeEventListener('pointerup', handlePointerUp);
 		};
-	}, []);
+	}, [draw, socket]);
 
 	// const handleKeyPress = (e: KeyboardEvent) => {
 	// 	e.preventDefault();

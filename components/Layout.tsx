@@ -32,7 +32,7 @@ export default function Layout({ children }: Props) {
 		return () => {
 			router.events.off('routeChangeStart', handleRouteChange);
 		};
-	}, []);
+	}, [router.events, socket]);
 
 	return (
 		<>
