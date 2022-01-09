@@ -13,7 +13,7 @@ export default function IconButton({
 	...props
 }: Props) {
 	const activeStyle = active
-		? 'bg-neutral-900 shadow-inner !text-black dark:!text-white'
+		? 'bg-neutral-300 dark:bg-neutral-900 shadow-inner !text-black dark:!text-white'
 		: 'shadow bg-neutral-50 dark:bg-neutral-600';
 	return (
 		<button
