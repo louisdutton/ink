@@ -5,7 +5,8 @@
 		"dev": "nodemon",
 		"build": "next build && tsc --project tsconfig.server.json",
 		"start": "NODE_ENV=production node dist/index.js",
-		"lint": "next lint"
+		"lint": "next lint",
+		"test": "jest --watch"
 	},
 	"dependencies": {
 		"bad-words": "^3.0.4",
