@@ -1,23 +1,25 @@
-type Props = {
-	children: any;
-	outline?: boolean;
-	icon?: boolean;
-	onClick?: React.MouseEventHandler<HTMLButtonElement>;
-};
+import { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
 
-export default function Button({
-	children,
-	outline = false,
-	icon = false,
-	onClick,
-	...props
-}: Props) {
+interface Props
+	extends DetailedHTMLProps<
+		ButtonHTMLAttributes<HTMLButtonElement>,
+		HTMLButtonElement
+	> {
+	outline?: boolean;
+}
+
+const Button = ({ outline, children, ...props }: Props) => {
 	return (
 		<button
-			className="px-4 py-2 rounded font-semibold tracking-wide bg-black hover:bg-white text-white hover:text-black border-2 border-black transition-colors duration-200 select-none flex justify-center items-center gap-4"
-			onClick={onClick}
+			className="px-4 py-2 rounded font-medium bg-neutral-700 hover:bg-neutral-600 text-white border border-neutral-500 hover:border-neutral-400 transition-colors duration-200 select-none whitespace-nowrap"
 			{...props}>
 			{children}
 		</button>
 	);
-}
+};
+
+Button.defaultProps = {
+	outline: false
+};
+
+export default Button;

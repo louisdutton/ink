@@ -19,7 +19,7 @@ const MessageFeed = ({ messages }: Props) => {
 	if (!messages) return <div />;
 
 	return (
-		<div className="overflow-y-scroll px-1 h-[500px] flex flex-col justify-end">
+		<div className="overflow-y-scroll break-all px-1 h-[500px] flex flex-col justify-end">
 			<List<Message>
 				items={messages as any[]}
 				render={(data: Message) => {
@@ -30,6 +30,7 @@ const MessageFeed = ({ messages }: Props) => {
 							return <StatusMessage data={data} />;
 					}
 				}}
+				// className="w-full"
 			/>
 			<div ref={bottomRef} />
 		</div>
@@ -42,7 +43,7 @@ interface MessageProps {
 
 function UserMessage({ data }: MessageProps) {
 	return (
-		<p>
+		<p className="msg-in">
 			<span className="font-bold">{data.username + ' '}</span>
 			<span className="text-neutral-500">{data.content}</span>
 		</p>
@@ -51,7 +52,7 @@ function UserMessage({ data }: MessageProps) {
 
 function StatusMessage({ data }: MessageProps) {
 	return (
-		<p className="text-sm text-neutral-500 my-1 px-2 border-l-4 dark:border-neutral-600 bg-neutral-800">
+		<p className="text-sm text-neutral-500 my-1 px-2 py-1 border-l-4 dark:border-neutral-600 bg-neutral-800 rounded-sm msg-in">
 			{data.username + ' ' + data.content}
 		</p>
 	);

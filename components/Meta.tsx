@@ -2,9 +2,9 @@ import Head from 'next/head';
 
 // Data
 const baseURL = 'https://draw.ink/';
-const baseTitle = 'draw.ink';
+const baseTitle = 'Ink';
 const twitterHandle = undefined;
-const baseImage = '/og_image.jpg';
+const baseImage = '/og_image.png';
 
 /** General metadata included in every page. */
 export function CoreMeta() {

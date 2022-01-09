@@ -5,12 +5,13 @@ import EV from './events';
 
 /** Initialise the given SocketIO server. */
 function socket(io: Server) {
-	console.log('Websockets are enabled');
-
 	io.on(EV.connection, (socket: Socket) => {
 		console.log(`${socket.id} connected`);
 
-		socket.emit(EV.SERVER.ROOMS, rooms);
+		// Client requesting room list
+		socket.on('request-rooms', () => {
+			socket.emit(EV.SERVER.ROOMS, rooms);
+		});
 
 		// on room created
 		socket.on(EV.CLIENT.ROOM_CREATE, ({ name, capacity, theme }, callback) => {
@@ -26,8 +27,19 @@ function socket(io: Server) {
 			callback({ data: rid });
 		});
 
-		// on room connection
+		// ON ROOM CONNECT
 		socket.on(EV.CLIENT.ROOM_JOIN, ({ id, username }, callback) => {
+			// ON ROOM DISCONNECT
+			socket.on(EV.disconnect, () => {
+				// announce disconnection
+				socket.leave(id);
+				console.log(`${socket.id} left ${id}`);
+				socket.to(id).emit(EV.SERVER.MESSAGE, msg.status(username, 'left'));
+
+				const userIndex = room.users.indexOf(socket.id);
+				if (userIndex > -1) room.users.splice(userIndex, 1);
+			});
+
 			// ensure socket does not already exist in room
 			const room = rooms[id];
 
@@ -54,27 +66,18 @@ function socket(io: Server) {
 			// Add socket to the room's user list
 			room.users.push(socket.id);
 
-			// Emit arrival messages to all sockets in the room (inclusive)
-			socket.to(id).emit(EV.SERVER.MESSAGE, msg.status(username, 'joined'));
-
-			// ON ROOM DISCONNECT
-			socket.on(EV.disconnect, () => {
-				// announce disconnection
-				socket.leave(id);
-				console.log(`${socket.id} left ${id}`);
-				socket.to(id).emit(EV.SERVER.MESSAGE, msg.status(username, 'left'));
-
-				const userIndex = room.users.indexOf(socket.id);
-				if (userIndex > -1) room.users.splice(userIndex, 1);
-			});
-
+			// Callback before arrive message is sent
 			callback({ data: id });
+
+			// Emit arrival messages to all sockets in the room (inclusive)
+			io.sockets.in(id).emit(EV.SERVER.MESSAGE, msg.status(username, 'joined'));
 		});
 
 		// ON LEAVE ROOM
 		socket.on(EV.CLIENT.ROOM_LEAVE, () => {
 			// leave all rooms
 			socket.rooms.forEach((roomId: string) => {
+				if (roomId === socket.id) return;
 				console.log(`${socket.id} left ${roomId}`);
 				socket.leave(roomId);
 
@@ -87,8 +90,12 @@ function socket(io: Server) {
 
 		// ON MESSAGE
 		socket.on(EV.CLIENT.MESSAGE, ({ roomId, content, username }) => {
-			// Emit message to all sockets in room (inclusive)
-			socket.to(roomId).emit(EV.SERVER.MESSAGE, msg.message(username, content));
+			console.log(socket.id);
+
+			// Emit message to all sockets in room (exclusive)
+			socket.broadcast
+				.to(roomId)
+				.emit(EV.SERVER.MESSAGE, msg.message(username, content));
 		});
 
 		// ON DRAW

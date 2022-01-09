@@ -182,16 +182,16 @@ export default function Canvas() {
 	// });
 
 	return (
-		<div className="flex flex-col">
+		<div className="sm:rounded-xl overflow-hidden shadow-xl flex flex-col dark:border border-neutral-700">
 			<canvas
 				ref={ref}
-				className="sm:rounded-t-xl !border-b-0 cursor-cell bg-white shadow-lg"
+				className="!border-b-0 cursor-cell bg-white"
 				onPointerMove={(e) => handlePointerMove(e)}
 				onPointerDown={(e) => handlePointerDown(e)}
 				// onBlur={(e) => setDrawing(false)}
 				// onKeyDown={(e) => handleKeyDown(e)}
 			/>
-			<div className="z-50 flex flex-col border-neutral-700 border-t rounded-b-xl bg-neutral-100 dark:bg-neutral-800 dark:border shadow-lg">
+			<div className="z-50 flex flex-col bg-neutral-100 dark:bg-neutral-800">
 				<div className="py-3 flex flex-col sm:flex-row gap-4 items-center justify-evenly">
 					<Palette setColor={(col) => setColor(col)} />
 					<List<Icon>

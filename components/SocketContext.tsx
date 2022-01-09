@@ -43,7 +43,11 @@ const url =
 		: 'https://draw.ink';
 
 // const url = 'https://draw-dot-ink.herokuapp.com';
-const socket = io(url);
+const socket = io(url, {
+	transports: ['websocket'],
+	upgrade: false,
+	autoConnect: false
+});
 const SocketContext = createContext<Context>({
 	socket,
 	username: 'user',
@@ -64,7 +68,7 @@ const SocketProvider: FC = (props) => {
 	const joinRoom = (id: string) => {
 		socket.emit(
 			EVENTS.CLIENT.ROOM_JOIN,
-			{ id, username: 'user' },
+			{ id, username },
 			({ error }: SocketCallback) => {
 				if (error) {
 					console.log(error);
@@ -78,6 +82,8 @@ const SocketProvider: FC = (props) => {
 	};
 
 	useEffect(() => {
+		socket.connect();
+
 		socket.on('disconnect', () => {
 			socket.removeAllListeners();
 			router.push('/');
