@@ -1,4 +1,4 @@
-import { ChangeEventHandler, forwardRef, HTMLProps } from 'react';
+import { forwardRef, HTMLProps } from 'react';
 
 type Props = {
 	label: string;
@@ -21,10 +21,11 @@ const Input = forwardRef<HTMLInputElement, HTMLProps<HTMLInputElement> & Props>(
 					ref={ref}
 					type="text"
 					placeholder={`Enter ${label}`}
+					autoComplete="off"
 					className="font-medium border rounded px-4 py-2 outline-none transition-colors group dark:border-neutral-600 bg-transparent
-        placeholder:text-neutral-400
+        placeholder:text-neutral-600
         hover:border-black dark:hover:border-white
-        focus:border-neutral-800 focus:bg-neutral-100 dark:focus:bg-transparent dark:focus:border-white"
+        focus:border-neutral-800 focus:bg-neutral-100 dark:focus:bg-neutral-800 dark:focus:border-white"
 				/>
 			</div>
 		);

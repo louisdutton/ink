@@ -13,7 +13,7 @@ type Props = {
 
 export default function Layout({ children }: Props) {
 	const router = useRouter();
-	const { socket } = useSockets();
+	const { socket, setUsername } = useSockets();
 
 	useEffect(() => {
 		const handleRouteChange = (

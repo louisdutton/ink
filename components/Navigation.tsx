@@ -1,12 +1,15 @@
 import { UserCircle, Bell } from 'phosphor-react';
 import Image from 'next/image';
+import { useSockets } from './SocketContext';
 
 export default function Navigation() {
+	const { username } = useSockets();
+
 	return (
-		<nav className={`h-full flex relative items-center gap-3`}>
-			{/* <p className="font-bold">{profile.username}</p> */}
-			<Bell size={30} weight="duotone" />
-			<UserCircle size={30} weight="duotone" />
+		<nav className={`h-full flex relative items-center gap-3 text-neutral-500`}>
+			<p className="font-medium">{username}</p>
+			<Bell size={28} />
+			<UserCircle size={28} />
 		</nav>
 	);
 }

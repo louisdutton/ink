@@ -1,14 +1,16 @@
-type Props = {
-	children: any;
-	className?: string;
-	onClick?: React.MouseEventHandler<HTMLButtonElement>;
+import { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
+
+interface Props
+	extends DetailedHTMLProps<
+		ButtonHTMLAttributes<HTMLButtonElement>,
+		HTMLButtonElement
+	> {
 	active?: boolean;
-};
+}
 
 export default function IconButton({
 	children,
 	className,
-	onClick,
 	active = false,
 	...props
 }: Props) {
@@ -18,7 +20,6 @@ export default function IconButton({
 	return (
 		<button
 			className={`flex justify-center items-center text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white rounded-lg p-2 ${activeStyle} ${className}`}
-			onClick={onClick}
 			{...props}>
 			{children}
 		</button>
