@@ -1,10 +1,10 @@
-# Ink
+# Ink &middot; [![Build][build-badge]][build] [![License][license-badge]][license] [![Discord][discord-badge]][discord]
+
+
 
 ![banner](banner.png)
 
-[![Build][build-badge]][build]
-[![License][license-badge]][license]
-[![Discord][discord-badge]][discord]
+
 
 An open-source drawing application and party game for the browser.
 
