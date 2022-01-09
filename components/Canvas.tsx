@@ -95,12 +95,22 @@ export default function Canvas() {
 	const handlePointerDown = (e: PointerEvent<HTMLCanvasElement>) => {
 		setDrawing(true);
 
-		if (!ctx) return;
+		if (!ctx || !weightSlider.current) return;
 
 		const x = e.nativeEvent.offsetX;
 		const y = e.nativeEvent.offsetY;
+		const pressure = e.pressure;
+		const weight = parseInt(weightSlider.current.value);
 
 		switch (tool) {
+			case Tool.Eraser:
+				EraserTool.move(ctx, x, y, x, y, weight);
+				break;
+
+			case Tool.Pen:
+				PenTool.move(ctx, color, pressure, weight, x, y, x, y);
+				break;
+
 			case Tool.Fill:
 				FillTool.down(ctx, x, y, color, window.devicePixelRatio);
 				break;
