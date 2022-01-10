@@ -1,13 +1,15 @@
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useRef } from 'react';
-import Canvas from '../components/Canvas';
-import Chat from '../components/Chat';
-import { useSockets } from '../components/SocketContext';
-import { Meta } from '../components/Meta';
+import Canvas from '@/components/Canvas';
+import Chat from '@/components/Chat';
+import { useSockets } from '@/components/SocketContext';
+import { Meta } from '@/components/Meta';
+import List from '@/components/List';
+import { User } from '@/server/rooms';
 
 export default function RoomPage() {
 	const router = useRouter();
-	const { socket, username, roomId } = useSockets();
+	const { socket, username, roomId, users } = useSockets();
 
 	// Else load up the page
 	const { id } = router.query;
@@ -25,12 +27,13 @@ export default function RoomPage() {
 			<Meta description="playing with friends" />
 			<div className="h-screen flex items-center">
 				<div className="w-screen flex justify-evenly flex-col sm:flex-row">
-					{/* {users && (
-            <List<User>
-              items={users}
-              render={(user: User) => <UserPlate user={user} />}
-            />
-          )} */}
+					{users && (
+						<List<User>
+							items={users}
+							render={(user) => <UserPlate user={user} />}
+							className="w-60"
+						/>
+					)}
 					<Canvas />
 					<Chat />
 				</div>
@@ -39,19 +42,21 @@ export default function RoomPage() {
 	);
 }
 
-// type UserPlateProps = {
-// 	user: User;
-// };
+type UserPlateProps = {
+	user: User;
+};
 
-// function UserPlate({ user }: UserPlateProps) {
-// 	return (
-// 		<div className="flex gap-4 items-center border-b px-5 py-2">
-// 			{/* <p className="w-4 font-bold">{user. + 1}.</p> */}
-// 			{/* <div className="rounded-full h-10 w-10 flex items-center justify-center">
-// 				<UserCircle size={40} />
-// 			</div> */}
-// 			<p className="font-bold whitespace-nowrap">{user.id}</p>
-// 			<p>0 pts</p>
-// 		</div>
-// 	);
-// }
+function UserPlate({ user }: UserPlateProps) {
+	return (
+		<div className="flex gap-4 items-center border-b border-neutral-500 px-5 py-2">
+			{/* <p className="w-4 font-bold">{user. + 1}.</p> */}
+			{/* <div className="rounded-full h-10 w-10 flex items-center justify-center">
+				<UserCircle size={40} />
+			</div> */}
+			<p className="font-bold whitespace-nowrap truncate ...">
+				{user.username}
+			</p>
+			<p className="text-sm font-bold">{user.score}&nbsp;pts</p>
+		</div>
+	);
+}

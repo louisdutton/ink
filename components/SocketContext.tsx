@@ -1,7 +1,8 @@
 import { useRouter } from 'next/router';
 import { createContext, useContext, FC, useState, useEffect } from 'react';
 import io, { Socket } from 'socket.io-client';
-import EVENTS from '../server/events';
+import EVENTS from '@/server/events';
+import { Room, User } from '@/server/rooms';
 
 export interface Message {
 	type: 'status' | 'message';
@@ -10,30 +11,24 @@ export interface Message {
 	username: string;
 }
 
-export interface Room {
-	name: string;
-	users: string[];
-	capacity: number;
-	theme: string;
-}
-
 export interface RoomsRecords {
 	[key: string]: Room;
 }
 
 export interface Context {
 	socket: Socket;
-	username: string;
-	setUsername: Function;
+	users: User[];
+	username?: string;
 	messages?: Message[];
-	setMessages: Function;
 	roomId?: string;
 	rooms: RoomsRecords;
+	setMessages: (value: Message[]) => void;
+	setUsername: (value: string) => void;
 	joinRoom: (id: string) => void;
 }
 
 export interface SocketCallback {
-	data: string;
+	data: any;
 	error?: string;
 }
 
@@ -50,17 +45,18 @@ const socket = io(url, {
 });
 const SocketContext = createContext<Context>({
 	socket,
-	username: 'user',
-	setUsername: () => false,
+	users: [],
+	setUsername: (value: string) => false,
 	setMessages: () => false,
-	joinRoom: (id) => {},
+	joinRoom: (id: string) => false,
 	rooms: {},
 	messages: []
 });
 
 const SocketProvider: FC = (props) => {
 	const router = useRouter();
-	const [username, setUsername] = useState<string>('user');
+	const [username, setUsername] = useState<string>();
+	const [users, setUsers] = useState<User[]>([]);
 	const [roomId, setRoomId] = useState<string>('');
 	const [rooms, setRooms] = useState<RoomsRecords>({});
 	const [messages, setMessages] = useState<Message[]>([]);
@@ -69,12 +65,12 @@ const SocketProvider: FC = (props) => {
 		socket.emit(
 			EVENTS.CLIENT.ROOM_JOIN,
 			{ id, username },
-			({ error }: SocketCallback) => {
+			({ error, data }: SocketCallback) => {
 				if (error) {
 					console.log(error);
 				} else {
 					setRoomId(id);
-					setMessages([]);
+					setUsers(data.users);
 					router.push('/' + id);
 				}
 			}
@@ -90,10 +86,13 @@ const SocketProvider: FC = (props) => {
 			console.log('disconnected');
 		});
 		socket.on(EVENTS.SERVER.ROOMS, (value) => setRooms(value));
-		// socket.on(EVENTS.SERVER.ROOM_JOIN, (value) => {
-		// 	setRoomId(value);
-		// 	setMessages([]);
-		// });
+		socket.on(EVENTS.SERVER.ROOM_JOIN, (user) => {
+			console.log(user);
+			setUsers((users) => [...users, user]);
+		});
+		socket.on(EVENTS.SERVER.ROOM_LEAVE, (user) => {
+			setUsers((users) => users.filter((u) => u !== user));
+		});
 		socket.on(EVENTS.SERVER.MESSAGE, (message: Message) => {
 			setMessages((messages) => [...messages, message]);
 		});
@@ -101,6 +100,7 @@ const SocketProvider: FC = (props) => {
 		return () => {
 			socket.off(EVENTS.SERVER.ROOMS);
 			socket.off(EVENTS.SERVER.ROOM_JOIN);
+			socket.off(EVENTS.SERVER.ROOM_LEAVE);
 			socket.off(EVENTS.SERVER.MESSAGE);
 		};
 	}, [router]);
@@ -109,12 +109,13 @@ const SocketProvider: FC = (props) => {
 		<SocketContext.Provider
 			value={{
 				socket,
+				users,
 				username,
-				setUsername,
-				joinRoom,
 				rooms,
 				roomId,
 				messages,
+				joinRoom,
+				setUsername,
 				setMessages
 			}}>
 			{props.children}

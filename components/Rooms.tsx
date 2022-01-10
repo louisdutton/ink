@@ -1,13 +1,14 @@
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import Button from './Button';
 import List from './List';
-import { Room, useSockets } from './SocketContext';
+import { useSockets } from './SocketContext';
 import { BookOpen, Users, X, ArrowsClockwise } from 'phosphor-react';
 import EVENTS from '../server/events';
 import { useRouter } from 'next/router';
 import Card from './Card';
 import Input from './Input';
 import IconButton from './IconButton';
+import { Room, Theme } from '@/server/rooms';
 
 function RoomsContainer() {
 	const { socket, rooms, joinRoom, setUsername } = useSockets();
@@ -40,10 +41,12 @@ function RoomsContainer() {
 			</h1>
 			<IconButton
 				className="absolute"
-				onClick={() => socket.emit('request-rooms')}>
+				onClick={(e) => {
+					e.preventDefault();
+					socket.emit('request-rooms');
+				}}>
 				<ArrowsClockwise size={26} />
 			</IconButton>
-			{/* <Input ref={usernameInput} label="username" /> */}
 			<List<string>
 				items={Object.keys(rooms)}
 				render={(key: string) => (
@@ -53,7 +56,13 @@ function RoomsContainer() {
 				)}
 				className="grid gap-2 sm:grid-cols-2"
 			/>
-			<Button onClick={() => setCreateRoomActive(true)}>Create Room</Button>
+			<Button
+				onClick={(e) => {
+					e.preventDefault();
+					setCreateRoomActive(true);
+				}}>
+				Create Room
+			</Button>
 		</form>
 	);
 }
@@ -90,7 +99,6 @@ interface RoomCreationProps {
 	setActive: Function;
 }
 
-type Theme = 'general' | 'animals' | 'objects';
 type Capacity = 4 | 8 | 16;
 
 const RoomCreation = ({ createRoom, setActive }: RoomCreationProps) => {
