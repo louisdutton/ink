@@ -47,7 +47,6 @@ function RoomsContainer() {
 				}}>
 				<ArrowsClockwise size={26} />
 			</IconButton>
-			{/* <Input ref={usernameInput} label="username" /> */}
 			<List<string>
 				items={Object.keys(rooms)}
 				render={(key: string) => (

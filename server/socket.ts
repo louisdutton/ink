@@ -86,7 +86,7 @@ function socket(io: Server) {
 			callback({ data: { id, users: room.users } });
 
 			// Emit arrival messages to all sockets in the room (inclusive)
-			socket.broadcast.to(id).emit(EVENT.SERVER.ROOM_JOIN, username); // TODO: this can be handled client side
+			socket.broadcast.to(id).emit(EVENT.SERVER.ROOM_JOIN, newUser); // TODO: this can be handled client side
 
 			io.sockets
 				.in(id)

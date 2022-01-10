@@ -18,12 +18,12 @@ export interface RoomsRecords {
 export interface Context {
 	socket: Socket;
 	users: User[];
-	username: string;
-	setUsername: Function;
+	username?: string;
 	messages?: Message[];
-	setMessages: Function;
 	roomId?: string;
 	rooms: RoomsRecords;
+	setMessages: (value: Message[]) => void;
+	setUsername: (value: string) => void;
 	joinRoom: (id: string) => void;
 }
 
@@ -46,17 +46,16 @@ const socket = io(url, {
 const SocketContext = createContext<Context>({
 	socket,
 	users: [],
-	username: 'user',
-	setUsername: () => false,
+	setUsername: (value: string) => false,
 	setMessages: () => false,
-	joinRoom: (id) => {},
+	joinRoom: (id: string) => false,
 	rooms: {},
 	messages: []
 });
 
 const SocketProvider: FC = (props) => {
 	const router = useRouter();
-	const [username, setUsername] = useState<string>('user');
+	const [username, setUsername] = useState<string>();
 	const [users, setUsers] = useState<User[]>([]);
 	const [roomId, setRoomId] = useState<string>('');
 	const [rooms, setRooms] = useState<RoomsRecords>({});
@@ -88,6 +87,7 @@ const SocketProvider: FC = (props) => {
 		});
 		socket.on(EVENTS.SERVER.ROOMS, (value) => setRooms(value));
 		socket.on(EVENTS.SERVER.ROOM_JOIN, (user) => {
+			console.log(user);
 			setUsers((users) => [...users, user]);
 		});
 		socket.on(EVENTS.SERVER.ROOM_LEAVE, (user) => {
@@ -111,11 +111,11 @@ const SocketProvider: FC = (props) => {
 				socket,
 				users,
 				username,
-				setUsername,
-				joinRoom,
 				rooms,
 				roomId,
 				messages,
+				joinRoom,
+				setUsername,
 				setMessages
 			}}>
 			{props.children}
