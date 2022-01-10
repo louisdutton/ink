@@ -13,6 +13,7 @@ export default {
 		ROOMS: 'rooms',
 		ROOM_CREATE: 'room-created',
 		ROOM_JOIN: 'room-joined',
+		ROOM_LEAVE: 'room-left',
 		MESSAGE: 'message-recieved',
 		DRAW: 'draw-recieved'
 	}
