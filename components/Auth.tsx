@@ -21,33 +21,34 @@ export default function SignIn() {
 	return (
 		<form
 			onSubmit={formHandler}
-			className="flex flex-col gap-4 w-full max-w-sm">
-			<h1 className="font-bold text-5xl text-center py-4">Welcome</h1>
-			<div className="flex flex-col gap-2">
-				<AuthButton
-					className="bg-[#5865F2] border-[#5865F2] hover:bg-[#6572Ff] hover:border-[#6572Ff] text-white"
-					method="Discord">
-					<FaDiscord size={28} />
-				</AuthButton>
-				<AuthButton
-					className="bg-neutral-700 border-neutral-700 text-white hover:bg-neutral-600 hover:border-neutral-600"
-					method="Github">
-					<FaGithub size={27} />
-				</AuthButton>
-				<AuthButton
-					className="text-white bg-blue-500 border-blue-500 hover:border-blue-400 hover:bg-blue-400"
-					method="Google">
-					<FaGoogle size={26} />
-				</AuthButton>
+			className="flex flex-col gap-4 w-full max-w-sm justify-evenly h-full">
+			<h1 className="font-bold text-5xl text-center">Welcome</h1>
+			<div className="flex flex-col gap-4">
+				<div className="flex flex-col gap-2">
+					<AuthButton
+						className="bg-[#5865F2] hover:bg-[#6572Ff]"
+						method="Discord">
+						<FaDiscord size={26} />
+					</AuthButton>
+					<AuthButton
+						className="bg-neutral-700 hover:bg-neutral-600"
+						method="Github">
+						<FaGithub size={25} />
+					</AuthButton>
+					<AuthButton
+						className="bg-[#4285F4] hover:bg-[#4E90FF]"
+						method="Google">
+						<FaGoogle size={24} />
+					</AuthButton>
+				</div>
+				<div className="relative text-neutral-400 my-4 uppercase text-xs tracking-wider">
+					<hr className="border-neutral-300 dark:border-neutral-500" />
+					<p className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-neutral-800 px-4 whitespace-nowrap font-medium">
+						or continue anonymously
+					</p>
+				</div>
+				<Input ref={usernameInput} label="username" />
 			</div>
-			<div className="relative text-neutral-400 my-4 uppercase text-xs tracking-wider">
-				<hr className="border-neutral-300 dark:border-neutral-500" />
-				<p className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-neutral-800 px-4 whitespace-nowrap">
-					or continue anonymously
-				</p>
-			</div>
-			<Input ref={usernameInput} label="username" />
-			<div className="my-2" />
 			<Button type="submit">Play</Button>
 		</form>
 	);
