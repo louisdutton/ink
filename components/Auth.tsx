@@ -21,17 +21,20 @@ export default function SignIn() {
   };
 
 	return (
-    <form onSubmit={formHandler} className="flex flex-col gap-4 w-full">
+    <form onSubmit={formHandler} className="flex flex-col gap-4 w-full max-w-sm">
       <h1 className="font-bold text-4xl text-center py-4">Sign in</h1>
     	<div className="flex flex-col gap-2">
-				<AuthButton className='bg-[#5865F2] hover:bg-[#626fFc] text-white'>
-        <FaDiscord size={28} /> Sign in with Discord 
+				<AuthButton className='bg-[#5865F2] border-[#5865F2] hover:bg-[#626fFc] hover:border-[#626fFc] text-white'>
+          <FaDiscord size={28} />
+          <p>Sign in with Discord</p> 
 				</AuthButton>
-				<AuthButton className='bg-neutral-700 text-white hover:bg-neutral-600'>
-        <FaGithub size={26} /> Sign in with Github 
+				<AuthButton className='bg-neutral-700 border-neutral-700 text-white hover:bg-neutral-600 hover:border-neutral-600'>
+          <FaGithub size={27} />
+          <p>Sign in with Github</p>
 				</AuthButton>
-				<AuthButton className='text-neutral-700 border-2 hover:border-neutral-400'>
-        <FcGoogle size={28}/> Sign in with Google 
+				<AuthButton className='text-neutral-600 hover:border-neutral-300'>
+          <FcGoogle size={28}/>
+          <p>Sign in with Google</p> 
 				</AuthButton>
 			</div>
     <div className='relative text-neutral-400 my-4 uppercase text-xs tracking-wider'>
