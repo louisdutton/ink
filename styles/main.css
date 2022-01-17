@@ -26,7 +26,7 @@ body {
 :disabled {
 	pointer-events: none;
 }
-
+/* 
 ::selection {
-	@apply bg-blue-300;
-}
+	@apply bg-purple-300;
+} */

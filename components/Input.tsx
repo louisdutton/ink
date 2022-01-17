@@ -11,7 +11,9 @@ const Input = forwardRef<HTMLInputElement, HTMLProps<HTMLInputElement> & Props>(
 		return (
 			<div className="flex flex-col gap-1 w-full">
 				{!noLabel && (
-					<label htmlFor={label} className="uppercase text-xs font-semibold text-neutral-400">
+					<label
+						htmlFor={label}
+						className="uppercase text-xs font-semibold text-neutral-400">
 						{label}
 					</label>
 				)}
@@ -22,8 +24,8 @@ const Input = forwardRef<HTMLInputElement, HTMLProps<HTMLInputElement> & Props>(
 					type="text"
 					placeholder={`Enter ${label}`}
 					autoComplete="off"
-					className="rounded px-4 py-2 outline-none transition-colors group bg-neutral-200 border-2 border-transparent
-        placeholder:text-neutral-400 gap-5 focus:border-black focus:bg-transparent
+					className="font-medium rounded px-4 py-2 outline-none transition-colors group bg-neutral-200 border-2 border-transparent
+        placeholder:text-neutral-400 placeholder:font-normal gap-5 focus:border-black focus:bg-transparent
         dark:bg-neutral-700 dark:focus:border-white dark:placeholder:text-neutral-500"
 				/>
 			</div>
