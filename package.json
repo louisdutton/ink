@@ -46,7 +46,6 @@
 		"nodemon": "^2.0.15",
 		"postcss": "^8.4.5",
 		"prettier": "^2.5.1",
-		"prettier-plugin-tailwind": "^2.2.12",
 		"tailwindcss": "^3.0.5",
 		"ts-jest": "^27.1.2",
 		"ts-node": "^10.4.0",
