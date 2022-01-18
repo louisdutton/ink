@@ -14,7 +14,7 @@ export default function Home() {
 			<Meta description={'An online drawing game'} />
 			<div className="hidden sm:block relative flex-1">
 				<Image
-					src="/bg.jpg"
+					src="/bg.jpeg"
 					layout="fill"
 					className="pointer-events-none"
 					objectFit="cover"

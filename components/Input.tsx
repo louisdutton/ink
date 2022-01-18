@@ -18,7 +18,7 @@ const Input = forwardRef<HTMLInputElement, HTMLProps<HTMLInputElement> & Props>(
 				{!noLabel && (
 					<label
 						htmlFor={label}
-						className={`uppercase text-xs font-medium transition-colors ${focusedColor}`}>
+						className={`uppercase text-xs font-bold transition-colors tracking-wide ${focusedColor}`}>
 						{label}
 					</label>
 				)}
@@ -31,7 +31,7 @@ const Input = forwardRef<HTMLInputElement, HTMLProps<HTMLInputElement> & Props>(
 					onFocus={() => setFocused(true)}
 					onBlur={() => setFocused(false)}
 					autoComplete="off"
-					className="font-medium rounded px-4 py-2 outline-none transition-colors group bg-transparent border-2 border-neutral-300
+					className="font-medium rounded px-4 py-2.5 outline-none transition-colors group bg-transparent border border-neutral-300
         placeholder:text-neutral-300 gap-5 focus:border-neutral-800 focus:bg-transparent
         dark:focus:border-white dark:placeholder:text-neutral-500 dark:border-neutral-600"
 				/>

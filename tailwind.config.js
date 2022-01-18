@@ -7,7 +7,9 @@ module.exports = {
 	theme: {
 		fontFamily: {
 			serif: ['Roboto Slab', 'serif'],
-			cursive: ['Architects Daughter', 'cursive']
+			cursive: ['Architects Daughter', 'cursive'],
+			skranji: ['Skranji', 'cursive'],
+			flavors: ['Flavors', 'cursive']
 		},
 		extend: {}
 	},

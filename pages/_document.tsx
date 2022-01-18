@@ -11,7 +11,7 @@ class Doc extends Document {
 			<Html>
 				<Head>
 					<link
-						href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Roboto+Slab&display=swap"
+						href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Roboto+Slab&family=Skranji:wght@700&family=Flavors&display=swap"
 						rel="stylesheet"
 					/>
 				</Head>

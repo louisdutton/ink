@@ -3,7 +3,6 @@ import { FaDiscord, FaGithub, FaGoogle } from 'react-icons/fa';
 import { FormEvent, useRef } from 'react';
 import AuthButton from './AuthButton';
 import Button from './Button';
-import IconButton from './IconButton';
 import Input from './Input';
 import { useSockets } from './SocketContext';
 
@@ -22,7 +21,7 @@ export default function SignIn() {
 		<form
 			onSubmit={formHandler}
 			className="flex flex-col gap-4 w-full max-w-sm justify-evenly h-full">
-			<h1 className="font-bold text-5xl text-center">Welcome</h1>
+			<h1 className="font-bold text-7xl text-center font-cursive">ink</h1>
 			<div className="flex flex-col gap-4">
 				<div className="flex flex-col gap-2">
 					<AuthButton
@@ -30,9 +29,7 @@ export default function SignIn() {
 						method="Discord">
 						<FaDiscord size={26} />
 					</AuthButton>
-					<AuthButton
-						className="bg-neutral-700 hover:bg-neutral-600"
-						method="Github">
+					<AuthButton className="bg-[#555] hover:bg-[#666]" method="Github">
 						<FaGithub size={25} />
 					</AuthButton>
 					<AuthButton

@@ -48,9 +48,9 @@ export default function Palette({ setColor }: Props) {
 	};
 
 	return (
-		<ul className="flex gap-1">
+		<ul className="flex gap-1.5">
 			{TAILWIND_COLORS.map((color, i) => (
-				<li key={color}>
+				<li key={color} className="flex">
 					<ColorButton
 						color={color}
 						onClick={() => handleClick(i)}
@@ -73,7 +73,7 @@ function ColorButton({ color, active = false, onClick }: ColorButtonProps) {
 	return (
 		<button
 			onClick={() => onClick()}
-			className={`w-8 h-8 rounded-md shadow-md hover:border-black cursor-pointer transition-all ${color} ${activeStyle}`}
+			className={`w-11 h-11 rounded-full shadow-md hover:border-black cursor-pointer transition-all ${color} ${activeStyle}`}
 		/>
 	);
 }
