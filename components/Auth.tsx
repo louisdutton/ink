@@ -20,8 +20,8 @@ export default function SignIn() {
 	return (
 		<form
 			onSubmit={formHandler}
-			className="flex flex-col gap-4 w-full max-w-sm justify-evenly h-full">
-			<h1 className="font-bold text-7xl text-center font-cursive">ink</h1>
+			className="flex flex-col w-full h-full max-w-sm gap-4 justify-evenly">
+			<h1 className="font-bold text-center text-7xl font-cursive">ink</h1>
 			<div className="flex flex-col gap-4">
 				<div className="flex flex-col gap-2">
 					<AuthButton
@@ -38,9 +38,9 @@ export default function SignIn() {
 						<FaGoogle size={24} />
 					</AuthButton>
 				</div>
-				<div className="relative text-neutral-400 my-4 uppercase text-xs tracking-wider">
+				<div className="relative my-4 text-xs tracking-wider uppercase text-neutral-400">
 					<hr className="border-neutral-300 dark:border-neutral-500" />
-					<p className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-neutral-800 px-4 whitespace-nowrap font-medium">
+					<p className="absolute top-0 px-4 font-medium bg-white left-1/2 -translate-x-1/2 -translate-y-1/2 dark:bg-neutral-800 whitespace-nowrap">
 						or continue anonymously
 					</p>
 				</div>

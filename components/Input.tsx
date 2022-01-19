@@ -14,7 +14,7 @@ const Input = forwardRef<HTMLInputElement, HTMLProps<HTMLInputElement> & Props>(
 			: 'text-neutral-400';
 
 		return (
-			<div className="flex flex-col gap-1 w-full">
+			<div className="flex flex-col w-full gap-1">
 				{!noLabel && (
 					<label
 						htmlFor={label}

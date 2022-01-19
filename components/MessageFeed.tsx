@@ -52,7 +52,7 @@ function UserMessage({ data }: MessageProps) {
 
 function StatusMessage({ data }: MessageProps) {
 	return (
-		<p className="text-sm text-neutral-500 my-1 px-2 py-1 border-l-4 dark:border-neutral-600 bg-neutral-800 rounded-sm msg-in">
+		<p className="px-2 py-1 my-1 text-sm border-l-4 rounded-sm text-neutral-500 dark:border-neutral-600 bg-neutral-800 msg-in">
 			{data.username + ' ' + data.content}
 		</p>
 	);

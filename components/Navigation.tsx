@@ -33,7 +33,7 @@ type AvatarProps = {
 
 function Avatar({ url }: AvatarProps) {
 	return (
-		<div className="w-8 h-8 border-2 border-black rounded-full relative overflow-hidden">
+		<div className="relative w-8 h-8 overflow-hidden border-2 border-black rounded-full">
 			<Image
 				src={url}
 				alt="User profile picture"
