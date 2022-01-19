@@ -14,9 +14,9 @@ export default function Navigation() {
 
 	return (
 		<nav className={`h-full flex relative items-center gap-4`}>
-			<IconButton onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+			{/* <IconButton onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
 				{theme === "dark" ? <FaSun size={24} /> : <FaMoon size={22} />}
-			</IconButton>
+			</IconButton> */}
 			{/* <p className="font-medium text-neutral-600">{username}</p> */}
 			<IconButton className="gap-3 !px-3 font-medium">
 				<p>1000</p>
@@ -25,7 +25,7 @@ export default function Navigation() {
 			<IconButton>
 				<FaBell size={24} />
 			</IconButton>
-			<Link href="/user/0">
+			<Link href="/user/0" passHref>
 				<IconButton>
 					<FaUserCircle size={24} />
 				</IconButton>

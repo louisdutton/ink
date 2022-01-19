@@ -17,6 +17,7 @@ export default function Home() {
 				<div className="relative flex-1 hidden sm:block">
 					<Image
 						src="/bg.jpeg"
+						alt="The winning submission to this month's art competition."
 						layout="fill"
 						className="pointer-events-none"
 						objectFit="cover"

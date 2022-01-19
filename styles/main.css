@@ -10,7 +10,7 @@ body {
 	min-height: calc(100vh - theme("spacing.14"));
 }
 
-.msg-in {
+.fade-in {
 	animation: fade-in 0.25s ease-out both;
 }
 
@@ -31,18 +31,11 @@ body {
 	@apply bg-purple-300;
 } */
 
-/* .light {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 20px;
-	height: 48px;
-	background-color: rgba(255, 255, 255, 1);
-	transform: skew(-20deg) translate(-100px, -100px);
+.tooltip-triangle:after {
+	content: "";
+	@apply absolute top-[100%] left-1/2 -ml-1;
+	margin-left: -10px;
+	border-width: 10px;
+	border-style: solid;
+	border-color: white transparent transparent transparent;
 }
-
-.light:hover {
-	background-color: rgba(255, 255, 255, 0.2);
-	transform: skew(-20deg) translate(48px, -100px);
-	transition: 0.7s;
-} */
