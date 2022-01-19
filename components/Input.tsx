@@ -1,4 +1,4 @@
-import { forwardRef, HTMLProps } from 'react';
+import { forwardRef, HTMLProps, useState } from 'react';
 
 type Props = {
 	label: string;
@@ -8,10 +8,17 @@ type Props = {
 
 const Input = forwardRef<HTMLInputElement, HTMLProps<HTMLInputElement> & Props>(
 	({ label, noLabel = false, ...props }: Props, ref) => {
+		const [focused, setFocused] = useState(false);
+		const focusedColor = focused
+			? 'dark:text-white text-neutral-800'
+			: 'text-neutral-400';
+
 		return (
 			<div className="flex flex-col gap-1 w-full">
 				{!noLabel && (
-					<label htmlFor={label} className="uppercase text-xs text-neutral-400">
+					<label
+						htmlFor={label}
+						className={`uppercase text-xs font-bold transition-colors tracking-wide ${focusedColor}`}>
 						{label}
 					</label>
 				)}
@@ -21,11 +28,12 @@ const Input = forwardRef<HTMLInputElement, HTMLProps<HTMLInputElement> & Props>(
 					ref={ref}
 					type="text"
 					placeholder={`Enter ${label}`}
+					onFocus={() => setFocused(true)}
+					onBlur={() => setFocused(false)}
 					autoComplete="off"
-					className="font-medium border rounded px-4 py-2 outline-none transition-colors group dark:border-neutral-600 bg-transparent
-        placeholder:text-neutral-600
-        hover:border-black dark:hover:border-white
-        focus:border-neutral-800 focus:bg-neutral-100 dark:focus:bg-neutral-800 dark:focus:border-white"
+					className="font-medium rounded px-4 py-2.5 outline-none transition-colors group bg-transparent border border-neutral-300
+        placeholder:text-neutral-300 gap-5 focus:border-neutral-800 focus:bg-transparent
+        dark:focus:border-white dark:placeholder:text-neutral-500 dark:border-neutral-600"
 				/>
 			</div>
 		);

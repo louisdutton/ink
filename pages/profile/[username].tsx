@@ -27,15 +27,7 @@ export default function RoomPage() {
 			<Meta description="playing with friends" />
 			<div className="h-screen flex items-center">
 				<div className="w-screen flex justify-evenly flex-col sm:flex-row">
-					{users && (
-						<List<User>
-							items={users}
-							render={(user) => <UserPlate user={user} />}
-							className="w-60"
-						/>
-					)}
-					<Canvas />
-					<Chat />
+
 				</div>
 			</div>
 		</div>

@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import EVENTS from '../server/events';
 import { useSockets } from '../components/SocketContext';
+import { ThemeProvider } from 'next-themes';
 
 export default function DrawDotInk({ Component, pageProps }: AppProps) {
 	const router = useRouter();
@@ -32,9 +33,11 @@ export default function DrawDotInk({ Component, pageProps }: AppProps) {
 
 	return (
 		<SocketProvider>
-			<Layout>
-				<Component {...pageProps} />
-			</Layout>
+			<ThemeProvider attribute="class">
+				<Layout>
+					<Component {...pageProps} />
+				</Layout>
+			</ThemeProvider>
 		</SocketProvider>
 	);
 }

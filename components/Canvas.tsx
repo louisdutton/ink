@@ -24,8 +24,8 @@ export interface DrawData {
 }
 
 const dimensions = {
-	width: 700,
-	height: 500
+	width: 960,
+	height: 540
 };
 
 enum Tool {
@@ -182,29 +182,30 @@ export default function Canvas() {
 	// });
 
 	return (
-		<div className="sm:rounded-xl overflow-hidden shadow-xl flex flex-col dark:border border-neutral-700">
+		<>
 			<canvas
 				ref={ref}
-				className="!border-b-0 cursor-cell bg-white"
+				className="cursor-cell bg-white rounded-lg shadow-lg"
 				onPointerMove={(e) => handlePointerMove(e)}
 				onPointerDown={(e) => handlePointerDown(e)}
 				// onBlur={(e) => setDrawing(false)}
 				// onKeyDown={(e) => handleKeyDown(e)}
 			/>
-			<div className="z-50 flex flex-col bg-neutral-100 dark:bg-neutral-800">
-				<div className="py-3 flex flex-col sm:flex-row gap-4 items-center justify-evenly">
+			<div className="z-50 bg-white dark:bg-neutral-800 absolute bottom-0 left-0 w-screen">
+				<div className="flex justify-evenly items-center w-full py-2">
 					<Palette setColor={(col) => setColor(col)} />
 					<List<Icon>
 						items={tools}
 						render={(Tool, i) => (
-							<IconButton onClick={() => setTool(i)} active={tool === i}>
-								<Tool size={30} weight="duotone" />
-							</IconButton>
+							<div className="flex gap-2 h-full">
+								<IconButton onClick={() => setTool(i)} active={tool === i}>
+									<Tool size={30} weight="duotone" />
+								</IconButton>
+								<div className="h-full w-[1px] bg-neutral-600" />
+							</div>
 						)}
 						className="flex gap-2"
 					/>
-				</div>
-				<div className="p-4 w-full">
 					<input
 						type="range"
 						step={10}
@@ -215,6 +216,6 @@ export default function Canvas() {
 					/>
 				</div>
 			</div>
-		</div>
+		</>
 	);
 }

@@ -129,18 +129,22 @@ const RoomCreation = ({ createRoom, setActive }: RoomCreationProps) => {
 		<form
 			className="flex flex-col gap-2 w-full relative"
 			onSubmit={handleCreateRoom}>
-			<IconButton
-				className="absolute right-0 -top-8"
-				onClick={() => setActive(false)}>
-				<X size={26} />
-			</IconButton>
+			<div className="flex justify-end">
+        <button
+          className=""
+          onClick={() => setActive(false)}>
+          <X size={26} />
+        </button>
+      </div>
+      <h1 className='text-5xl py-4 font-bold'>Create a room</h1>
+      <hr />
 			<Input ref={roomName} label="room name" />
-			<div className="flex w-full gap-2">
+			<div className="flex w-full gap-2 my-2">
 				<select
 					onChange={(e) => setCapacity(parseInt(e.target.value) as Capacity)}
 					name="Size"
 					id="size"
-					className="h-10 rounded bg-neutral-700 border border-neutral-500 px-4">
+					className="h-10 rounded bg-neutral-100 dark:bg-neutral-700 border px-4">
 					<option value={4}>4</option>
 					<option value={8}>8</option>
 					<option value={16}>16</option>
@@ -150,12 +154,13 @@ const RoomCreation = ({ createRoom, setActive }: RoomCreationProps) => {
 					name="Theme"
 					id="theme"
 					defaultValue="general"
-					className="h-10 rounded bg-neutral-700 px-4 border border-neutral-500 flex-1">
+					className="h-10 rounded bg-neutral-100 dark:bg-neutral-700 px-4 border flex-1 font-medium">
 					<option value="general">General</option>
 					<option value="animals">Animals</option>
 					<option value="objects">Objects</option>
 				</select>
 			</div>
+      <hr className='py-3'/>
 			<Button type="submit">create room</Button>
 		</form>
 	);

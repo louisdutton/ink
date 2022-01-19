@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-	@apply transition-colors duration-200 bg-white text-black dark:bg-neutral-900 dark:text-white;
+	@apply transition-colors duration-200 bg-neutral-100 text-black dark:bg-neutral-900 dark:text-white;
 }
 
 .content-area {
@@ -26,7 +26,7 @@ body {
 :disabled {
 	pointer-events: none;
 }
-
+/* 
 ::selection {
-	@apply bg-blue-300;
-}
+	@apply bg-purple-300;
+} */

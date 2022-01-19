@@ -1,4 +1,5 @@
 module.exports = {
+	darkMode: 'class',
 	content: [
 		'./pages/**/*.{js,ts,jsx,tsx}',
 		'./components/**/*.{js,ts,jsx,tsx}'
@@ -6,7 +7,9 @@ module.exports = {
 	theme: {
 		fontFamily: {
 			serif: ['Roboto Slab', 'serif'],
-			cursive: ['Architects Daughter', 'cursive']
+			cursive: ['Architects Daughter', 'cursive'],
+			skranji: ['Skranji', 'cursive'],
+			flavors: ['Flavors', 'cursive']
 		},
 		extend: {}
 	},
