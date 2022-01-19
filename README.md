@@ -1,4 +1,4 @@
-# Ink &middot; [![Build][build-badge]][build] [![License][license-badge]][license] [![Discord][discord-badge]][discord]
+# Ink &middot; [![CI][build-badge]][build] [![License][license-badge]][license] [![Discord][discord-badge]][discord]
 
 
 
