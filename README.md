@@ -23,8 +23,8 @@ An open-source drawing application and party game for the browser.
 [node-badge]: https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white
 [socket-badge]: https://img.shields.io/badge/Socket.io-black?style=for-the-badge&logo=socket.io&badgeColor=010101
 [ocean-badge]: https://img.shields.io/badge/DigitalOcean-%230167ff.svg?style=for-the-badge&logo=digitalOcean&logoColor=white
-[build]: https://github.com/ink-draw/ink/actions/workflows/validate.yml
-[build-badge]: https://img.shields.io/github/workflow/status/draw-dot-ink/ink/validate?logo=github
+[build]: https://github.com/ink-draw/ink/actions/workflows/ci.yml
+[build-badge]: https://img.shields.io/github/workflow/status/draw-dot-ink/ink/ci?logo=github
 [license-badge]: 
   https://img.shields.io/badge/License-MIT-yellow.svg
 [license]: https://opensource.org/licenses/MIT
