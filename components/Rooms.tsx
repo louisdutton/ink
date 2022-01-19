@@ -1,14 +1,14 @@
-import { FormEvent, useEffect, useRef, useState } from 'react';
-import Button from './Button';
-import List from './List';
-import { useSockets } from './SocketContext';
-import { BookOpen, Users, X, ArrowsClockwise } from 'phosphor-react';
-import EVENTS from '../server/events';
-import { useRouter } from 'next/router';
-import Card from './Card';
-import Input from './Input';
-import IconButton from './IconButton';
-import { Room, Theme } from '@/server/rooms';
+import { FormEvent, useEffect, useRef, useState } from "react";
+import Button from "./Button";
+import List from "./List";
+import { useSockets } from "./SocketContext";
+import { BookOpen, Users, X, ArrowsClockwise } from "phosphor-react";
+import EVENTS from "../server/events";
+import { useRouter } from "next/router";
+import Card from "./Card";
+import Input from "./Input";
+import IconButton from "./IconButton";
+import { Room, Theme } from "@/server/rooms";
 
 function RoomsContainer() {
 	const { socket, rooms, joinRoom, setUsername } = useSockets();
@@ -23,7 +23,7 @@ function RoomsContainer() {
 	};
 
 	useEffect(() => {
-		socket.emit('request-rooms');
+		socket.emit("request-rooms");
 	}, [socket]);
 
 	if (createRoomActive)
@@ -35,15 +35,15 @@ function RoomsContainer() {
 		);
 
 	return (
-		<form className="flex gap-2 flex-col">
-			<h1 className="font-bold text-4xl text-center py-4">
+		<form className="flex flex-col gap-2">
+			<h1 className="py-4 text-4xl font-bold text-center">
 				Join or create a room
 			</h1>
 			<IconButton
 				className="absolute"
 				onClick={(e) => {
 					e.preventDefault();
-					socket.emit('request-rooms');
+					socket.emit("request-rooms");
 				}}>
 				<ArrowsClockwise size={26} />
 			</IconButton>
@@ -75,8 +75,8 @@ interface RoomCardProps {
 function RoomCard({ room }: RoomCardProps) {
 	return (
 		<div>
-			<Card className="p-5 hover:border-black dark:hover:border-white cursor-pointer flex flex-col gap-2">
-				<h3 className="font-bold text-2xl">{room.name}</h3>
+			<Card className="flex flex-col gap-2 p-5 cursor-pointer hover:border-black dark:hover:border-white">
+				<h3 className="text-2xl font-bold">{room.name}</h3>
 				<div className="flex gap-8">
 					<div className="flex items-center gap-2">
 						<Users size={30} />
@@ -104,12 +104,12 @@ type Capacity = 4 | 8 | 16;
 const RoomCreation = ({ createRoom, setActive }: RoomCreationProps) => {
 	const roomName = useRef<HTMLInputElement>(null);
 	const [capacity, setCapacity] = useState<Capacity>(8);
-	const [theme, setTheme] = useState<Theme>('general');
+	const [theme, setTheme] = useState<Theme>("general");
 
 	const handleCreateRoom = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		// validate room name
-		let name = roomName.current?.value || '';
+		let name = roomName.current?.value || "";
 		if (!name.trim()) return;
 
 		// emit room created event
@@ -117,7 +117,7 @@ const RoomCreation = ({ createRoom, setActive }: RoomCreationProps) => {
 			name,
 			users: [],
 			capacity,
-			theme
+			theme,
 		};
 
 		console.log(room);
@@ -127,24 +127,22 @@ const RoomCreation = ({ createRoom, setActive }: RoomCreationProps) => {
 
 	return (
 		<form
-			className="flex flex-col gap-2 w-full relative"
+			className="relative flex flex-col w-full gap-2"
 			onSubmit={handleCreateRoom}>
 			<div className="flex justify-end">
-        <button
-          className=""
-          onClick={() => setActive(false)}>
-          <X size={26} />
-        </button>
-      </div>
-      <h1 className='text-5xl py-4 font-bold'>Create a room</h1>
-      <hr />
+				<button className="" onClick={() => setActive(false)}>
+					<X size={26} />
+				</button>
+			</div>
+			<h1 className="py-4 text-5xl font-bold">Create a room</h1>
+			<hr />
 			<Input ref={roomName} label="room name" />
 			<div className="flex w-full gap-2 my-2">
 				<select
 					onChange={(e) => setCapacity(parseInt(e.target.value) as Capacity)}
 					name="Size"
 					id="size"
-					className="h-10 rounded bg-neutral-100 dark:bg-neutral-700 border px-4">
+					className="h-10 px-4 border rounded bg-neutral-100 dark:bg-neutral-700">
 					<option value={4}>4</option>
 					<option value={8}>8</option>
 					<option value={16}>16</option>
@@ -154,13 +152,13 @@ const RoomCreation = ({ createRoom, setActive }: RoomCreationProps) => {
 					name="Theme"
 					id="theme"
 					defaultValue="general"
-					className="h-10 rounded bg-neutral-100 dark:bg-neutral-700 px-4 border flex-1 font-medium">
+					className="flex-1 h-10 px-4 font-medium border rounded bg-neutral-100 dark:bg-neutral-700">
 					<option value="general">General</option>
 					<option value="animals">Animals</option>
 					<option value="objects">Objects</option>
 				</select>
 			</div>
-      <hr className='py-3'/>
+			<hr className="py-3" />
 			<Button type="submit">create room</Button>
 		</form>
 	);

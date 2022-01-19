@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
+import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 
 interface Props
 	extends DetailedHTMLProps<
@@ -11,8 +11,7 @@ interface Props
 const Button = ({ outline, children, ...props }: Props) => {
 	return (
 		<button
-			className="px-4 py-2.5 rounded font-medium text-white bg-neutral-900 hover:bg-neutral-700 transition-colors duration-200 select-none whitespace-nowrap
-      dark:bg-neutral-600 dark:hover:bg-neutral-500"
+			className="px-4 py-3 font-bold text-white transition-colors duration-200 rounded-full shadow-md select-none bg-neutral-900 hover:bg-neutral-700 whitespace-nowrap dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
 			{...props}>
 			{children}
 		</button>
@@ -20,7 +19,7 @@ const Button = ({ outline, children, ...props }: Props) => {
 };
 
 Button.defaultProps = {
-	outline: false
+	outline: false,
 };
 
 export default Button;

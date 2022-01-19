@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 body {
-	@apply transition-colors duration-200 bg-neutral-100 text-black dark:bg-neutral-900 dark:text-white;
+	@apply text-black transition-colors duration-200 bg-neutral-100 dark:bg-neutral-900 dark:text-white;
 }
 
 .content-area {
-	min-height: calc(100vh - theme('spacing.14'));
+	min-height: calc(100vh - theme("spacing.14"));
 }
 
 .msg-in {
@@ -29,4 +29,20 @@ body {
 /* 
 ::selection {
 	@apply bg-purple-300;
+} */
+
+/* .light {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 20px;
+	height: 48px;
+	background-color: rgba(255, 255, 255, 1);
+	transform: skew(-20deg) translate(-100px, -100px);
+}
+
+.light:hover {
+	background-color: rgba(255, 255, 255, 0.2);
+	transform: skew(-20deg) translate(48px, -100px);
+	transition: 0.7s;
 } */

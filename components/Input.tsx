@@ -1,4 +1,4 @@
-import { forwardRef, HTMLProps, useState } from 'react';
+import { forwardRef, HTMLProps, useState } from "react";
 
 type Props = {
 	label: string;
@@ -10,15 +10,15 @@ const Input = forwardRef<HTMLInputElement, HTMLProps<HTMLInputElement> & Props>(
 	({ label, noLabel = false, ...props }: Props, ref) => {
 		const [focused, setFocused] = useState(false);
 		const focusedColor = focused
-			? 'dark:text-white text-neutral-800'
-			: 'text-neutral-400';
+			? "dark:text-white text-neutral-800"
+			: "text-neutral-400";
 
 		return (
-			<div className="flex flex-col gap-1 w-full">
+			<div className="flex flex-col w-full gap-1">
 				{!noLabel && (
 					<label
 						htmlFor={label}
-						className={`uppercase text-xs font-bold transition-colors tracking-wide ${focusedColor}`}>
+						className={`uppercase text-xs font-medium transition-colors tracking-wide ${focusedColor}`}>
 						{label}
 					</label>
 				)}
@@ -40,5 +40,5 @@ const Input = forwardRef<HTMLInputElement, HTMLProps<HTMLInputElement> & Props>(
 	}
 );
 
-Input.displayName = 'Input';
+Input.displayName = "Input";
 export default Input;
