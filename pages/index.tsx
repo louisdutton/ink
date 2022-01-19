@@ -10,9 +10,9 @@ export default function Home() {
 	const { username } = useSockets();
 
 	return (
-		<div className="w-full h-screen dark:bg-transparent flex relative">
+		<div className="relative flex w-full h-screen dark:bg-transparent">
 			<Meta description={'An online drawing game'} />
-			<div className="hidden sm:block relative flex-1">
+			<div className="relative flex-1 hidden sm:block">
 				<Image
 					src="/bg.jpeg"
 					layout="fill"

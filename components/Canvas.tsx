@@ -185,19 +185,19 @@ export default function Canvas() {
 		<>
 			<canvas
 				ref={ref}
-				className="cursor-cell bg-white rounded-lg shadow-lg"
+				className="bg-white rounded-lg shadow-lg cursor-cell"
 				onPointerMove={(e) => handlePointerMove(e)}
 				onPointerDown={(e) => handlePointerDown(e)}
 				// onBlur={(e) => setDrawing(false)}
 				// onKeyDown={(e) => handleKeyDown(e)}
 			/>
-			<div className="z-50 bg-white dark:bg-neutral-800 absolute bottom-0 left-0 w-screen">
-				<div className="flex justify-evenly items-center w-full py-2">
+			<div className="absolute bottom-0 left-0 z-50 w-screen bg-white dark:bg-neutral-800">
+				<div className="flex items-center w-full py-2 justify-evenly">
 					<Palette setColor={(col) => setColor(col)} />
 					<List<Icon>
 						items={tools}
 						render={(Tool, i) => (
-							<div className="flex gap-2 h-full">
+							<div className="flex h-full gap-2">
 								<IconButton onClick={() => setTool(i)} active={tool === i}>
 									<Tool size={30} weight="duotone" />
 								</IconButton>

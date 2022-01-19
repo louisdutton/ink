@@ -35,8 +35,8 @@ function RoomsContainer() {
 		);
 
 	return (
-		<form className="flex gap-2 flex-col">
-			<h1 className="font-bold text-4xl text-center py-4">
+		<form className="flex flex-col gap-2">
+			<h1 className="py-4 text-4xl font-bold text-center">
 				Join or create a room
 			</h1>
 			<IconButton
@@ -75,8 +75,8 @@ interface RoomCardProps {
 function RoomCard({ room }: RoomCardProps) {
 	return (
 		<div>
-			<Card className="p-5 hover:border-black dark:hover:border-white cursor-pointer flex flex-col gap-2">
-				<h3 className="font-bold text-2xl">{room.name}</h3>
+			<Card className="flex flex-col p-5 cursor-pointer hover:border-black dark:hover:border-white gap-2">
+				<h3 className="text-2xl font-bold">{room.name}</h3>
 				<div className="flex gap-8">
 					<div className="flex items-center gap-2">
 						<Users size={30} />
@@ -127,7 +127,7 @@ const RoomCreation = ({ createRoom, setActive }: RoomCreationProps) => {
 
 	return (
 		<form
-			className="flex flex-col gap-2 w-full relative"
+			className="relative flex flex-col w-full gap-2"
 			onSubmit={handleCreateRoom}>
 			<div className="flex justify-end">
         <button
@@ -136,15 +136,15 @@ const RoomCreation = ({ createRoom, setActive }: RoomCreationProps) => {
           <X size={26} />
         </button>
       </div>
-      <h1 className='text-5xl py-4 font-bold'>Create a room</h1>
+      <h1 className='py-4 text-5xl font-bold'>Create a room</h1>
       <hr />
 			<Input ref={roomName} label="room name" />
-			<div className="flex w-full gap-2 my-2">
+			<div className="flex w-full my-2 gap-2">
 				<select
 					onChange={(e) => setCapacity(parseInt(e.target.value) as Capacity)}
 					name="Size"
 					id="size"
-					className="h-10 rounded bg-neutral-100 dark:bg-neutral-700 border px-4">
+					className="h-10 px-4 border rounded bg-neutral-100 dark:bg-neutral-700">
 					<option value={4}>4</option>
 					<option value={8}>8</option>
 					<option value={16}>16</option>
@@ -154,7 +154,7 @@ const RoomCreation = ({ createRoom, setActive }: RoomCreationProps) => {
 					name="Theme"
 					id="theme"
 					defaultValue="general"
-					className="h-10 rounded bg-neutral-100 dark:bg-neutral-700 px-4 border flex-1 font-medium">
+					className="flex-1 h-10 px-4 font-medium border rounded bg-neutral-100 dark:bg-neutral-700">
 					<option value="general">General</option>
 					<option value="animals">Animals</option>
 					<option value="objects">Objects</option>
