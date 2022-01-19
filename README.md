@@ -6,7 +6,7 @@
 
 
 
-An open-source drawing application and party game for the browser.
+An open-source drawing application and party game for the browser. 
 
 ## Built with...
 ![TypeScript][ts-badge]
