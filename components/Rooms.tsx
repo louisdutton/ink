@@ -137,7 +137,7 @@ const RoomCreation = ({ createRoom, setActive }: RoomCreationProps) => {
 			onSubmit={handleCreateRoom}>
 			<div className="flex justify-end">
 				<button className="" onClick={() => setActive(false)}>
-					<X size={26} />
+					{/* <X size={26} /> */}
 				</button>
 			</div>
 			<h1 className="py-4 text-5xl font-bold">Create a room</h1>

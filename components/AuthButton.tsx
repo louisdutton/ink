@@ -22,7 +22,7 @@ const AuthButton = ({
 			{...props}>
 			<div className="relative flex items-center justify-center">
 				<div className="absolute left-0 p-3">{children}</div>
-				<p className="py-3 text-center px- whitespace-nowrap">
+				<p className="px-2 py-3 text-center whitespace-nowrap">
 					Sign in with {method}
 				</p>
 			</div>

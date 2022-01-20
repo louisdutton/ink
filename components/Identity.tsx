@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Drop } from "phosphor-react";
 
 export default function Identity() {
 	return (

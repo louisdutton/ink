@@ -5,7 +5,8 @@
 		"dev": "next dev",
 		"build": "next build",
 		"export": "next export",
-		"lint": "next lint"
+		"lint": "next lint",
+    "ci": "yarn install --frozen-lockfile && yarn build"
 	},
 	"dependencies": {
 		"firebase": "^9.6.3",
