@@ -5,14 +5,15 @@ import { useRouter } from "next/router";
 import Card from "./Card";
 import Input from "./Input";
 import IconButton from "./IconButton";
+import { FaUsers, FaBookOpen, FaSpinner } from "react-icons/fa";
 import { query, collection, getDocs, DocumentData } from "firebase/firestore";
-import { rooms } from "@/lib/firebase";
+import { db, rooms } from "@/lib/firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
 
 function RoomsContainer() {
 	const [createRoomActive, setCreateRoomActive] = useState(false);
 	const [rooms, setRooms] = useState();
-	const [value, loading, error] = useCollection(rooms);
+	const [value, loading, error] = useCollection(collection(db, "rooms"));
 
 	// const handleCreateRoom = (room: Room) => {
 	// 	socket.emit(EVENTS.CLIENT.ROOM_CREATE, room, ({ data }: any) => {
@@ -30,7 +31,7 @@ function RoomsContainer() {
 	// 	);
 
 	return (
-		<form className="flex flex-col gap-2">
+		<form className="w-full gap-2 p-4">
 			<h1 className="py-4 text-4xl font-bold text-center">
 				Join or create a room
 			</h1>
@@ -42,13 +43,13 @@ function RoomsContainer() {
 				}}>
 				<ArrowsClockwise size={26} />
 			</IconButton> */}
-			{loading && <p>Loading...</p>}
+			{loading && <FaSpinner className="animate-spin" />}
 			{value && (
 				<List<DocumentData>
 					items={value.docs}
 					render={(doc) => (
 						<div key={doc.id} onClick={() => console.log(doc.id)}>
-							<RoomCard room={doc.data()} />
+							<RoomCard room={doc} />
 						</div>
 					)}
 					className="grid gap-2 sm:grid-cols-2"
@@ -67,28 +68,35 @@ function RoomsContainer() {
 export default RoomsContainer;
 
 interface RoomCardProps {
-	room: any;
+	room: DocumentData;
+}
+
+interface Room {
+	name: string;
+	users: string[];
+	capacity: number;
+	theme: string;
 }
 
 function RoomCard({ room }: RoomCardProps) {
+	const { name, users, capacity, theme }: Room = room.data();
+
 	return (
-		<div>
-			<Card className="flex flex-col gap-2 p-5 cursor-pointer hover:border-black dark:hover:border-white">
-				<h3 className="text-2xl font-bold">{room.name}</h3>
-				<div className="flex gap-8">
-					<div className="flex items-center gap-2">
-						{/* <Users size={30} /> */}
-						<p>
-							{room.users.length}/{room.capacity}
-						</p>
-					</div>
-					<div className="flex items-center gap-2">
-						{/* <BookOpen size={30} /> */}
-						<p>{room.theme}</p>
-					</div>
+		<Card className="w-40 h-40 gap-2 p-5 shadow-lg cursor-pointer hover:border-black dark:hover:border-white">
+			<h3 className="text-xl font-medium">{name}</h3>
+			<div className="gap-8 py-2">
+				<div className="flex items-center gap-2">
+					<FaUsers size={24} />
+					<p>
+						{users.length}/{capacity}
+					</p>
 				</div>
-			</Card>
-		</div>
+				<div className="flex items-center gap-2">
+					<FaBookOpen size={24} />
+					<p>{theme}</p>
+				</div>
+			</div>
+		</Card>
 	);
 }
 

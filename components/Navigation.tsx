@@ -33,15 +33,21 @@ export default function Navigation() {
 			<IconButton>
 				<FaBell size={24} />
 			</IconButton>
-			<Link href="/user/0" passHref>
+			{user ? (
+				<Link href={"/user/" + user.uid} passHref>
+					<IconButton>
+						<img
+							src={user.photoURL}
+							alt="Profile Picture"
+							className="w-10 h-10 rounded-full"
+						/>
+					</IconButton>
+				</Link>
+			) : (
 				<IconButton>
-					{user?.photoURL ? (
-						<img src={user.photoURL} alt="Profile Picture" />
-					) : (
-						<FaUserCircle size={24} />
-					)}
+					<FaUserCircle size={24} />
 				</IconButton>
-			</Link>
+			)}
 		</nav>
 	);
 }
