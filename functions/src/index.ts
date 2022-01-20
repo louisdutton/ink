@@ -21,6 +21,6 @@ exports.userCreated = functions.auth.user().onCreate((user) => {
 });
 
 // Clean up userdata in the firestore db on user deletion.
-exports.userCreated = functions.auth.user().onDelete((user) => {
+exports.userDeleted = functions.auth.user().onDelete((user) => {
 	return db.doc(`users/${user.uid}`).delete();
 });
