@@ -27,7 +27,7 @@ export default function SignIn() {
 		const provider = new GoogleAuthProvider();
 		signInWithPopup(auth, provider)
 			.then((credential) => {
-				credential.user.id;
+				credential.user.uid;
 			})
 			.catch((error) => console.log(error));
 	};
