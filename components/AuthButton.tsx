@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
+import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 
 interface Props
 	extends DetailedHTMLProps<
@@ -18,7 +18,7 @@ const AuthButton = ({
 }: Props) => {
 	return (
 		<button
-			className={`rounded font-medium transition-colors duration-200 select-none text-white ${className}`}
+			className={`rounded-full font-medium transition-colors duration-200 select-none text-white shadow-md ${className}`}
 			{...props}>
 			<div className="relative flex items-center justify-center">
 				<div className="absolute left-0 p-3">{children}</div>
@@ -31,7 +31,7 @@ const AuthButton = ({
 };
 
 AuthButton.defaultProps = {
-	outline: false
+	outline: false,
 };
 
 export default AuthButton;

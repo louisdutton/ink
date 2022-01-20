@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState, PointerEvent, useCallback } from 'react';
-import Palette from '../components/Palette';
-import List from './List';
-import IconButton from './IconButton';
-import { PenTool, EraserTool, FillTool } from '../lib/tools';
-import { Pen, Eraser, PaintBucket, Rectangle, IconProps } from 'phosphor-react';
-import { useSockets } from './SocketContext';
-import EVENTS from '../server/events';
+import { useEffect, useRef, useState, PointerEvent, useCallback } from "react";
+import Palette from "../components/Palette";
+import List from "./List";
+import IconButton from "./IconButton";
+import { PenTool, EraserTool, FillTool } from "../lib/tools";
+import { Pen, Eraser, PaintBucket, Rectangle, IconProps } from "phosphor-react";
+import { useSockets } from "../lib/types";
+import EVENTS from "../server/events";
 
 type Icon = React.ForwardRefExoticComponent<
 	IconProps & React.RefAttributes<SVGSVGElement>
@@ -25,13 +25,13 @@ export interface DrawData {
 
 const dimensions = {
 	width: 960,
-	height: 540
+	height: 540,
 };
 
 enum Tool {
 	Pen,
 	Eraser,
-	Fill
+	Fill,
 }
 
 export default function Canvas() {
@@ -40,7 +40,7 @@ export default function Canvas() {
 	const [tool, setTool] = useState<Tool>(Tool.Pen);
 	const [drawing, setDrawing] = useState(false);
 	const [position, setPosition] = useState<[number, number]>();
-	const [color, setColor] = useState('#000000');
+	const [color, setColor] = useState("#000000");
 	const { socket, roomId } = useSockets();
 	const tools = [Pen, Eraser, PaintBucket];
 	const weightSlider = useRef<HTMLInputElement>(null);
@@ -80,7 +80,7 @@ export default function Canvas() {
 			py: position[1],
 			x,
 			y,
-			roomId: roomId ?? ''
+			roomId: roomId ?? "",
 		};
 
 		// draw locally
@@ -121,37 +121,37 @@ export default function Canvas() {
 		if (!ref.current) return;
 
 		const canvas = ref.current;
-		const ctx = canvas.getContext('2d')!;
+		const ctx = canvas.getContext("2d")!;
 		setCtx(ctx); // async
 
-		canvas.style.height = dimensions.height + 'px';
-		canvas.style.width = dimensions.width + 'px';
+		canvas.style.height = dimensions.height + "px";
+		canvas.style.width = dimensions.width + "px";
 
 		const scale = window.devicePixelRatio;
 		canvas.width = Math.floor(dimensions.width * scale);
 		canvas.height = Math.floor(dimensions.height * scale);
 		ctx.scale(scale, scale);
-		console.log('Canvas Scale: ' + scale);
+		console.log("Canvas Scale: " + scale);
 
 		// fill white
 		// ctx.imageSmoothingEnabled = true;
-		ctx.fillStyle = '#ffffff';
+		ctx.fillStyle = "#ffffff";
 		ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
 		// stroke style
 		ctx.lineWidth = 5;
-		ctx.lineCap = 'round';
-		ctx.lineJoin = 'round';
+		ctx.lineCap = "round";
+		ctx.lineJoin = "round";
 
 		// subscribe draw function to socket event
 		socket.on(EVENTS.SERVER.DRAW, draw);
 
 		// global pointer up event so it works outside of canvas
-		window.addEventListener('pointerup', handlePointerUp);
+		window.addEventListener("pointerup", handlePointerUp);
 
 		return () => {
 			socket.off(EVENTS.SERVER.DRAW, draw);
-			window.removeEventListener('pointerup', handlePointerUp);
+			window.removeEventListener("pointerup", handlePointerUp);
 		};
 	}, [draw, socket]);
 

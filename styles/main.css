@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 body {
-	@apply transition-colors duration-200 bg-neutral-100 text-black dark:bg-neutral-900 dark:text-white;
+	@apply text-black transition-colors duration-200 bg-neutral-100 dark:bg-neutral-900 dark:text-white;
 }
 
 .content-area {
-	min-height: calc(100vh - theme('spacing.14'));
+	min-height: calc(100vh - theme("spacing.14"));
 }
 
-.msg-in {
+.fade-in {
 	animation: fade-in 0.25s ease-out both;
 }
 
@@ -30,3 +30,12 @@ body {
 ::selection {
 	@apply bg-purple-300;
 } */
+
+.tooltip-triangle:after {
+	content: "";
+	@apply absolute top-[100%] left-1/2 -ml-1;
+	margin-left: -10px;
+	border-width: 10px;
+	border-style: solid;
+	border-color: white transparent transparent transparent;
+}

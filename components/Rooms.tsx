@@ -1,61 +1,60 @@
-import { FormEvent, useEffect, useRef, useState } from 'react';
-import Button from './Button';
-import List from './List';
-import { useSockets } from './SocketContext';
-import { BookOpen, Users, X, ArrowsClockwise } from 'phosphor-react';
-import EVENTS from '../server/events';
-import { useRouter } from 'next/router';
-import Card from './Card';
-import Input from './Input';
-import IconButton from './IconButton';
-import { Room, Theme } from '@/server/rooms';
+import { FormEvent, useEffect, useRef, useState } from "react";
+import Button from "./Button";
+import List from "./List";
+import { useRouter } from "next/router";
+import Card from "./Card";
+import Input from "./Input";
+import IconButton from "./IconButton";
+import { FaUsers, FaBookOpen, FaSpinner } from "react-icons/fa";
+import { query, collection, getDocs, DocumentData } from "firebase/firestore";
+import { db, rooms } from "@/lib/firebase";
+import { useCollection } from "react-firebase-hooks/firestore";
 
 function RoomsContainer() {
-	const { socket, rooms, joinRoom, setUsername } = useSockets();
-	const usernameInput = useRef<HTMLInputElement>(null);
 	const [createRoomActive, setCreateRoomActive] = useState(false);
+	const [rooms, setRooms] = useState();
+	const [value, loading, error] = useCollection(collection(db, "rooms"));
 
-	const handleCreateRoom = (room: Room) => {
-		socket.emit(EVENTS.CLIENT.ROOM_CREATE, room, ({ data }: any) => {
-			console.log(`Successfully created room: ${data}`);
-			joinRoom(data);
-		});
-	};
+	// const handleCreateRoom = (room: Room) => {
+	// 	socket.emit(EVENTS.CLIENT.ROOM_CREATE, room, ({ data }: any) => {
+	// 		console.log(`Successfully created room: ${data}`);
+	// 		joinRoom(data);
+	// 	});
+	// };
 
-	useEffect(() => {
-		socket.emit('request-rooms');
-	}, [socket]);
-
-	if (createRoomActive)
-		return (
-			<RoomCreation
-				createRoom={handleCreateRoom}
-				setActive={setCreateRoomActive}
-			/>
-		);
+	// if (createRoomActive)
+	// 	return (
+	// 		<RoomCreation
+	// 			createRoom={handleCreateRoom}
+	// 			setActive={setCreateRoomActive}
+	// 		/>
+	// 	);
 
 	return (
-		<form className="flex flex-col gap-2">
+		<form className="w-full gap-2 p-4">
 			<h1 className="py-4 text-4xl font-bold text-center">
 				Join or create a room
 			</h1>
-			<IconButton
+			{/* <IconButton
 				className="absolute"
 				onClick={(e) => {
 					e.preventDefault();
-					socket.emit('request-rooms');
+					socket.emit("request-rooms");
 				}}>
 				<ArrowsClockwise size={26} />
-			</IconButton>
-			<List<string>
-				items={Object.keys(rooms)}
-				render={(key: string) => (
-					<div key={key} onClick={() => joinRoom(key)}>
-						<RoomCard room={rooms[key]} />
-					</div>
-				)}
-				className="grid gap-2 sm:grid-cols-2"
-			/>
+			</IconButton> */}
+			{loading && <FaSpinner className="animate-spin" />}
+			{value && (
+				<List<DocumentData>
+					items={value.docs}
+					render={(doc) => (
+						<div key={doc.id} onClick={() => console.log(doc.id)}>
+							<RoomCard room={doc} />
+						</div>
+					)}
+					className="grid gap-2 sm:grid-cols-2"
+				/>
+			)}
 			<Button
 				onClick={(e) => {
 					e.preventDefault();
@@ -69,28 +68,35 @@ function RoomsContainer() {
 export default RoomsContainer;
 
 interface RoomCardProps {
-	room: Room;
+	room: DocumentData;
+}
+
+interface Room {
+	name: string;
+	users: string[];
+	capacity: number;
+	theme: string;
 }
 
 function RoomCard({ room }: RoomCardProps) {
+	const { name, users, capacity, theme }: Room = room.data();
+
 	return (
-		<div>
-			<Card className="flex flex-col p-5 cursor-pointer hover:border-black dark:hover:border-white gap-2">
-				<h3 className="text-2xl font-bold">{room.name}</h3>
-				<div className="flex gap-8">
-					<div className="flex items-center gap-2">
-						<Users size={30} />
-						<p>
-							{room.users.length}/{room.capacity}
-						</p>
-					</div>
-					<div className="flex items-center gap-2">
-						<BookOpen size={30} />
-						<p>{room.theme}</p>
-					</div>
+		<Card className="w-40 h-40 gap-2 p-5 shadow-lg cursor-pointer hover:border-black dark:hover:border-white">
+			<h3 className="text-xl font-medium">{name}</h3>
+			<div className="gap-8 py-2">
+				<div className="flex items-center gap-2">
+					<FaUsers size={24} />
+					<p>
+						{users.length}/{capacity}
+					</p>
 				</div>
-			</Card>
-		</div>
+				<div className="flex items-center gap-2">
+					<FaBookOpen size={24} />
+					<p>{theme}</p>
+				</div>
+			</div>
+		</Card>
 	);
 }
 
@@ -104,20 +110,20 @@ type Capacity = 4 | 8 | 16;
 const RoomCreation = ({ createRoom, setActive }: RoomCreationProps) => {
 	const roomName = useRef<HTMLInputElement>(null);
 	const [capacity, setCapacity] = useState<Capacity>(8);
-	const [theme, setTheme] = useState<Theme>('general');
+	// const [theme, setTheme] = useState<Theme>("general");
 
 	const handleCreateRoom = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		// validate room name
-		let name = roomName.current?.value || '';
+		let name = roomName.current?.value || "";
 		if (!name.trim()) return;
 
 		// emit room created event
-		const room: Room = {
+		const room = {
 			name,
 			users: [],
 			capacity,
-			theme
+			theme,
 		};
 
 		console.log(room);
@@ -130,16 +136,14 @@ const RoomCreation = ({ createRoom, setActive }: RoomCreationProps) => {
 			className="relative flex flex-col w-full gap-2"
 			onSubmit={handleCreateRoom}>
 			<div className="flex justify-end">
-        <button
-          className=""
-          onClick={() => setActive(false)}>
-          <X size={26} />
-        </button>
-      </div>
-      <h1 className='py-4 text-5xl font-bold'>Create a room</h1>
-      <hr />
+				<button className="" onClick={() => setActive(false)}>
+					{/* <X size={26} /> */}
+				</button>
+			</div>
+			<h1 className="py-4 text-5xl font-bold">Create a room</h1>
+			<hr />
 			<Input ref={roomName} label="room name" />
-			<div className="flex w-full my-2 gap-2">
+			<div className="flex w-full gap-2 my-2">
 				<select
 					onChange={(e) => setCapacity(parseInt(e.target.value) as Capacity)}
 					name="Size"
@@ -160,7 +164,7 @@ const RoomCreation = ({ createRoom, setActive }: RoomCreationProps) => {
 					<option value="objects">Objects</option>
 				</select>
 			</div>
-      <hr className='py-3'/>
+			<hr className="py-3" />
 			<Button type="submit">create room</Button>
 		</form>
 	);
