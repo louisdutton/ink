@@ -1,19 +1,21 @@
 import { useRouter } from "next/router";
 import { useContext, useEffect, useRef } from "react";
-import { useSockets } from "@/components/SocketContext";
 import { Meta } from "@/components/Meta";
 import List from "@/components/List";
-import { User } from "@/server/rooms";
 import Image from "next/image";
 import { FaOctopusDeploy, FaEdit } from "react-icons/fa";
 import Badges from "@/components/Badges";
 import IconButton from "../../components/IconButton";
+import { useDocument } from "react-firebase-hooks/firestore";
+import { doc } from "firebase/firestore";
+import { db } from "../../lib/firebase";
 
 const UserPage = () => {
 	const router = useRouter();
 
 	// Else load up the page
 	const { id } = router.query;
+	const [value, loading, error] = useDocument(doc(db, "users", id as string));
 
 	return (
 		<div className="dark:bg-transparent">
@@ -25,6 +27,9 @@ const UserPage = () => {
 					Member since: {new Date().toLocaleDateString()}
 				</p>
 				<Badges />
+				{error && <strong>Error: {JSON.stringify(error)}</strong>}
+				{loading && <span>Document: Loading...</span>}
+				{value && <span>Document: {JSON.stringify(value.data())}</span>}
 			</div>
 		</div>
 	);

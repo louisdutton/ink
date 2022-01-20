@@ -1,16 +1,23 @@
 import { FaBell, FaUserCircle, FaSun, FaMoon, FaCoins } from "react-icons/fa";
 import { RiCopperCoinFill } from "react-icons/ri";
 import Image from "next/image";
-import { useSockets } from "./SocketContext";
+// import { useSockets } from "../lib/firebase";
 import IconButton from "./IconButton";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 import Link from "next/link";
+import { auth } from "../lib/firebase";
+import { signOut } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function Navigation() {
-	const { username } = useSockets();
 	const [open, setOpen] = useState(false);
 	const { theme, setTheme } = useTheme();
+	const [user, loading, error] = useAuthState(auth);
+
+	const handleSignOut = () => {
+		signOut(auth).catch((error) => console.log(error));
+	};
 
 	return (
 		<nav className={`h-full flex relative items-center gap-4`}>
@@ -22,12 +29,17 @@ export default function Navigation() {
 				<p>1000</p>
 				<FaCoins size={24} />
 			</IconButton>
+			{user && <button onClick={() => handleSignOut()}>sign out</button>}
 			<IconButton>
 				<FaBell size={24} />
 			</IconButton>
 			<Link href="/user/0" passHref>
 				<IconButton>
-					<FaUserCircle size={24} />
+					{user?.photoURL ? (
+						<img src={user.photoURL} alt="Profile Picture" />
+					) : (
+						<FaUserCircle size={24} />
+					)}
 				</IconButton>
 			</Link>
 		</nav>

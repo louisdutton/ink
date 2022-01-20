@@ -1,8 +1,7 @@
-import { Profiler, useEffect, useRef } from 'react';
-import { useSockets, Message } from './SocketContext';
-import EVENTS from '../server/events';
-import MessageFeed from './MessageFeed';
-import MessageInput from './MessageInput';
+import { Profiler, useEffect, useRef } from "react";
+import { useSockets, Message } from "../lib/firebase";
+import MessageFeed from "./MessageFeed";
+import MessageInput from "./MessageInput";
 
 export default function Chat() {
 	const { socket, messages, roomId, username, setMessages } = useSockets();
@@ -12,16 +11,16 @@ export default function Chat() {
 
 		socket.emit(EVENTS.CLIENT.MESSAGE, {
 			roomId,
-			type: 'message',
+			type: "message",
 			content,
-			username
+			username,
 		});
 
 		const localMessage: Message = {
-			type: 'message',
+			type: "message",
 			content,
 			time: Date.now(),
-			username: 'You'
+			username: "You",
 		};
 
 		setMessages([...messages, localMessage]);
@@ -30,7 +29,7 @@ export default function Chat() {
 	if (!roomId) return <div />;
 
 	return (
-		<div className="w-64 hidden sm:flex flex-col justify-end gap-4">
+		<div className="flex-col justify-end hidden w-64 gap-4 sm:flex">
 			<MessageFeed messages={messages} />
 			<MessageInput action={sendMessage} disabled={false} />
 		</div>

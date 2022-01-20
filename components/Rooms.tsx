@@ -1,61 +1,59 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Button from "./Button";
 import List from "./List";
-import { useSockets } from "./SocketContext";
-import { BookOpen, Users, X, ArrowsClockwise } from "phosphor-react";
-import EVENTS from "../server/events";
 import { useRouter } from "next/router";
 import Card from "./Card";
 import Input from "./Input";
 import IconButton from "./IconButton";
-import { Room, Theme } from "@/server/rooms";
+import { query, collection, getDocs, DocumentData } from "firebase/firestore";
+import { rooms } from "@/lib/firebase";
+import { useCollection } from "react-firebase-hooks/firestore";
 
 function RoomsContainer() {
-	const { socket, rooms, joinRoom, setUsername } = useSockets();
-	const usernameInput = useRef<HTMLInputElement>(null);
 	const [createRoomActive, setCreateRoomActive] = useState(false);
+	const [rooms, setRooms] = useState();
+	const [value, loading, error] = useCollection(rooms);
 
-	const handleCreateRoom = (room: Room) => {
-		socket.emit(EVENTS.CLIENT.ROOM_CREATE, room, ({ data }: any) => {
-			console.log(`Successfully created room: ${data}`);
-			joinRoom(data);
-		});
-	};
+	// const handleCreateRoom = (room: Room) => {
+	// 	socket.emit(EVENTS.CLIENT.ROOM_CREATE, room, ({ data }: any) => {
+	// 		console.log(`Successfully created room: ${data}`);
+	// 		joinRoom(data);
+	// 	});
+	// };
 
-	useEffect(() => {
-		socket.emit("request-rooms");
-	}, [socket]);
-
-	if (createRoomActive)
-		return (
-			<RoomCreation
-				createRoom={handleCreateRoom}
-				setActive={setCreateRoomActive}
-			/>
-		);
+	// if (createRoomActive)
+	// 	return (
+	// 		<RoomCreation
+	// 			createRoom={handleCreateRoom}
+	// 			setActive={setCreateRoomActive}
+	// 		/>
+	// 	);
 
 	return (
 		<form className="flex flex-col gap-2">
 			<h1 className="py-4 text-4xl font-bold text-center">
 				Join or create a room
 			</h1>
-			<IconButton
+			{/* <IconButton
 				className="absolute"
 				onClick={(e) => {
 					e.preventDefault();
 					socket.emit("request-rooms");
 				}}>
 				<ArrowsClockwise size={26} />
-			</IconButton>
-			<List<string>
-				items={Object.keys(rooms)}
-				render={(key: string) => (
-					<div key={key} onClick={() => joinRoom(key)}>
-						<RoomCard room={rooms[key]} />
-					</div>
-				)}
-				className="grid gap-2 sm:grid-cols-2"
-			/>
+			</IconButton> */}
+			{loading && <p>Loading...</p>}
+			{value && (
+				<List<DocumentData>
+					items={value.docs}
+					render={(doc) => (
+						<div key={doc.id} onClick={() => console.log(doc.id)}>
+							<RoomCard room={doc.data()} />
+						</div>
+					)}
+					className="grid gap-2 sm:grid-cols-2"
+				/>
+			)}
 			<Button
 				onClick={(e) => {
 					e.preventDefault();
@@ -69,7 +67,7 @@ function RoomsContainer() {
 export default RoomsContainer;
 
 interface RoomCardProps {
-	room: Room;
+	room: any;
 }
 
 function RoomCard({ room }: RoomCardProps) {
@@ -79,13 +77,13 @@ function RoomCard({ room }: RoomCardProps) {
 				<h3 className="text-2xl font-bold">{room.name}</h3>
 				<div className="flex gap-8">
 					<div className="flex items-center gap-2">
-						<Users size={30} />
+						{/* <Users size={30} /> */}
 						<p>
 							{room.users.length}/{room.capacity}
 						</p>
 					</div>
 					<div className="flex items-center gap-2">
-						<BookOpen size={30} />
+						{/* <BookOpen size={30} /> */}
 						<p>{room.theme}</p>
 					</div>
 				</div>
@@ -104,7 +102,7 @@ type Capacity = 4 | 8 | 16;
 const RoomCreation = ({ createRoom, setActive }: RoomCreationProps) => {
 	const roomName = useRef<HTMLInputElement>(null);
 	const [capacity, setCapacity] = useState<Capacity>(8);
-	const [theme, setTheme] = useState<Theme>("general");
+	// const [theme, setTheme] = useState<Theme>("general");
 
 	const handleCreateRoom = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -113,7 +111,7 @@ const RoomCreation = ({ createRoom, setActive }: RoomCreationProps) => {
 		if (!name.trim()) return;
 
 		// emit room created event
-		const room: Room = {
+		const room = {
 			name,
 			users: [],
 			capacity,

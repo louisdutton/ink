@@ -1,18 +1,15 @@
-import { useRouter } from 'next/router';
-import { useContext, useEffect, useRef } from 'react';
-import Canvas from '@/components/Canvas';
-import Chat from '@/components/Chat';
-import { useSockets } from '@/components/SocketContext';
-import { Meta } from '@/components/Meta';
-import List from '@/components/List';
-import { User } from '@/server/rooms';
+import { useRouter } from "next/router";
+import { useContext, useEffect, useRef } from "react";
+import Canvas from "@/components/Canvas";
+import Chat from "@/components/Chat";
+import { Meta } from "@/components/Meta";
+import List from "@/components/List";
 
 export default function RoomPage() {
 	const router = useRouter();
-	const { socket, username, roomId, users } = useSockets();
 
 	// Else load up the page
-	const { id } = router.query;
+
 	// useEffect(() => {
 	// 	if (!profile) {
 	// 		router.push('/');
@@ -25,15 +22,15 @@ export default function RoomPage() {
 	return (
 		<div className="dark:bg-transparent">
 			<Meta description="playing with friends" />
-			<div className="h-screen flex items-center">
-				<div className="w-screen flex justify-evenly flex-col sm:flex-row">
-					{users && (
+			<div className="flex items-center h-screen">
+				<div className="flex flex-col w-screen justify-evenly sm:flex-row">
+					{/* {users && (
 						<List<User>
 							items={users}
 							render={(user) => <UserPlate user={user} />}
 							className="w-60"
 						/>
-					)}
+					)} */}
 					<Canvas />
 					<Chat />
 				</div>
@@ -43,13 +40,13 @@ export default function RoomPage() {
 }
 
 type UserPlateProps = {
-	user: User;
+	user: any;
 };
 
 function UserPlate({ user }: UserPlateProps) {
 	return (
-		<div className="flex justify-between gap-4 items-center border-b border-neutral-300 px-5 py-2">
-			{/* <div className="rounded-full h-10 w-10 flex items-center justify-center">
+		<div className="flex items-center justify-between gap-4 px-5 py-2 border-b border-neutral-300">
+			{/* <div className="flex items-center justify-center w-10 h-10 rounded-full">
 				<UserCircle size={40} />
 			</div> */}
 			<p className="font-bold whitespace-nowrap truncate ...">

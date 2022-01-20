@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
-import List from './List';
-import { Message } from './SocketContext';
+import { useEffect, useRef } from "react";
+import List from "./List";
+import { Message } from "../lib/firebase";
 
 interface Props {
 	messages?: Message[];
@@ -11,8 +11,8 @@ const MessageFeed = ({ messages }: Props) => {
 
 	useEffect(() => {
 		bottomRef.current?.scrollIntoView({
-			block: 'start',
-			behavior: 'smooth'
+			block: "start",
+			behavior: "smooth",
 		});
 	}, [messages]);
 
@@ -24,9 +24,9 @@ const MessageFeed = ({ messages }: Props) => {
 				items={messages as any[]}
 				render={(data: Message) => {
 					switch (data.type) {
-						case 'message':
+						case "message":
 							return <UserMessage data={data} />;
-						case 'status':
+						case "status":
 							return <StatusMessage data={data} />;
 					}
 				}}
@@ -44,7 +44,7 @@ interface MessageProps {
 function UserMessage({ data }: MessageProps) {
 	return (
 		<p className="msg-in">
-			<span className="font-bold">{data.username + ' '}</span>
+			<span className="font-bold">{data.username + " "}</span>
 			<span className="text-neutral-500">{data.content}</span>
 		</p>
 	);
@@ -52,8 +52,8 @@ function UserMessage({ data }: MessageProps) {
 
 function StatusMessage({ data }: MessageProps) {
 	return (
-		<p className="text-sm text-neutral-500 my-1 px-2 py-1 border-l-4 dark:border-neutral-600 bg-neutral-800 rounded-sm msg-in">
-			{data.username + ' ' + data.content}
+		<p className="px-2 py-1 my-1 text-sm border-l-4 rounded-sm text-neutral-500 dark:border-neutral-600 bg-neutral-800 msg-in">
+			{data.username + " " + data.content}
 		</p>
 	);
 }

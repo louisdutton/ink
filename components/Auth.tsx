@@ -4,17 +4,32 @@ import { FormEvent, useRef } from "react";
 import AuthButton from "./AuthButton";
 import Button from "./Button";
 import Input from "./Input";
-import { useSockets } from "./SocketContext";
+import {
+	GoogleAuthProvider,
+	useDeviceLanguage,
+	signInWithPopup,
+	signInAnonymously,
+} from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 export default function SignIn() {
 	const usernameInput = useRef<HTMLInputElement>(null);
-	const { setUsername } = useSockets();
 
 	const formHandler = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const value = usernameInput.current?.value;
 		if (!value?.trim()) return;
-		setUsername(value);
+		// setUsername(value);
+		// signInAnonymously(auth);
+	};
+
+	const signInWithGoogle = () => {
+		const provider = new GoogleAuthProvider();
+		signInWithPopup(auth, provider)
+			.then((credential) => {
+				credential.user.id;
+			})
+			.catch((error) => console.log(error));
 	};
 
 	return (
@@ -35,15 +50,16 @@ export default function SignIn() {
 			</div>
 			<div className="flex flex-col gap-4">
 				<div className="flex flex-col gap-2">
-					<AuthButton
+					{/* <AuthButton
 						className="bg-[#5865F2] hover:bg-[#6572Ff]"
 						method="Discord">
 						<FaDiscord size={26} />
-					</AuthButton>
-					<AuthButton className="bg-[#555] hover:bg-[#666]" method="Github">
+					</AuthButton> */}
+					{/* <AuthButton className="bg-[#555] hover:bg-[#666]" method="Github">
 						<FaGithub size={25} />
-					</AuthButton>
+					</AuthButton> */}
 					<AuthButton
+						onClick={() => signInWithGoogle()}
 						className="bg-[#4285F4] hover:bg-[#4E90FF]"
 						method="Google">
 						<FaGoogle size={24} />
