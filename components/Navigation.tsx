@@ -37,7 +37,7 @@ export default function Navigation() {
 				<Link href={"/user/" + user.uid} passHref>
 					<IconButton>
 						<img
-							src={user.photoURL}
+							src={user.photoURL ?? ""}
 							alt="Profile Picture"
 							className="w-10 h-10 rounded-full"
 						/>

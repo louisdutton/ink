@@ -100,72 +100,72 @@ function RoomCard({ room }: RoomCardProps) {
 	);
 }
 
-interface RoomCreationProps {
-	createRoom: Function;
-	setActive: Function;
-}
+// interface RoomCreationProps {
+// 	createRoom: Function;
+// 	setActive: Function;
+// }
 
-type Capacity = 4 | 8 | 16;
+// type Capacity = 4 | 8 | 16;
 
-const RoomCreation = ({ createRoom, setActive }: RoomCreationProps) => {
-	const roomName = useRef<HTMLInputElement>(null);
-	const [capacity, setCapacity] = useState<Capacity>(8);
-	// const [theme, setTheme] = useState<Theme>("general");
+// const RoomCreation = ({ createRoom, setActive }: RoomCreationProps) => {
+// 	const roomName = useRef<HTMLInputElement>(null);
+// 	const [capacity, setCapacity] = useState<Capacity>(8);
+// 	// const [theme, setTheme] = useState<Theme>("general");
 
-	const handleCreateRoom = (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		// validate room name
-		let name = roomName.current?.value || "";
-		if (!name.trim()) return;
+// 	const handleCreateRoom = (e: FormEvent<HTMLFormElement>) => {
+// 		e.preventDefault();
+// 		// validate room name
+// 		let name = roomName.current?.value || "";
+// 		if (!name.trim()) return;
 
-		// emit room created event
-		const room = {
-			name,
-			users: [],
-			capacity,
-			theme,
-		};
+// 		// emit room created event
+// 		// const room = {
+// 		// 	name,
+// 		// 	users: [],
+// 		// 	capacity,
+// 		// 	theme,
+// 		// };
 
-		console.log(room);
+// 		// console.log(room);
 
-		createRoom(room);
-	};
+// 		// createRoom(room);
+// 	};
 
-	return (
-		<form
-			className="relative flex flex-col w-full gap-2"
-			onSubmit={handleCreateRoom}>
-			<div className="flex justify-end">
-				<button className="" onClick={() => setActive(false)}>
-					{/* <X size={26} /> */}
-				</button>
-			</div>
-			<h1 className="py-4 text-5xl font-bold">Create a room</h1>
-			<hr />
-			<Input ref={roomName} label="room name" />
-			<div className="flex w-full gap-2 my-2">
-				<select
-					onChange={(e) => setCapacity(parseInt(e.target.value) as Capacity)}
-					name="Size"
-					id="size"
-					className="h-10 px-4 border rounded bg-neutral-100 dark:bg-neutral-700">
-					<option value={4}>4</option>
-					<option value={8}>8</option>
-					<option value={16}>16</option>
-				</select>
-				<select
-					onChange={(e) => setTheme(e.target.value as Theme)}
-					name="Theme"
-					id="theme"
-					defaultValue="general"
-					className="flex-1 h-10 px-4 font-medium border rounded bg-neutral-100 dark:bg-neutral-700">
-					<option value="general">General</option>
-					<option value="animals">Animals</option>
-					<option value="objects">Objects</option>
-				</select>
-			</div>
-			<hr className="py-3" />
-			<Button type="submit">create room</Button>
-		</form>
-	);
-};
+// 	return (
+// 		<form
+// 			className="relative flex flex-col w-full gap-2"
+// 			onSubmit={handleCreateRoom}>
+// 			<div className="flex justify-end">
+// 				<button className="" onClick={() => setActive(false)}>
+// 					{/* <X size={26} /> */}
+// 				</button>
+// 			</div>
+// 			<h1 className="py-4 text-5xl font-bold">Create a room</h1>
+// 			<hr />
+// 			<Input ref={roomName} label="room name" />
+// 			<div className="flex w-full gap-2 my-2">
+// 				<select
+// 					onChange={(e) => setCapacity(parseInt(e.target.value) as Capacity)}
+// 					name="Size"
+// 					id="size"
+// 					className="h-10 px-4 border rounded bg-neutral-100 dark:bg-neutral-700">
+// 					<option value={4}>4</option>
+// 					<option value={8}>8</option>
+// 					<option value={16}>16</option>
+// 				</select>
+// 				<select
+// 					onChange={(e) => setTheme(e.target.value as Theme)}
+// 					name="Theme"
+// 					id="theme"
+// 					defaultValue="general"
+// 					className="flex-1 h-10 px-4 font-medium border rounded bg-neutral-100 dark:bg-neutral-700">
+// 					<option value="general">General</option>
+// 					<option value="animals">Animals</option>
+// 					<option value="objects">Objects</option>
+// 				</select>
+// 			</div>
+// 			<hr className="py-3" />
+// 			<Button type="submit">create room</Button>
+// 		</form>
+// 	);
+// };
