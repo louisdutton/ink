@@ -10,19 +10,18 @@ An open-source drawing application and party game for the browser.
 
 ## Built with...
 ![TypeScript][ts-badge]
-![Next JS][next-badge]
 ![TailwindCSS][tailwind-badge]
-![NodeJS][node-badge]
-![Socket.io][socket-badge]
-![DigitalOcean][ocean-badge]
+![Next JS][next-badge]
+![Vercel][vercel-badge]
+![Firebase][fire-badge]
 
 
 [ts-badge]: https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white
 [next-badge]: https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white
 [tailwind-badge]: https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white
 [node-badge]: https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white
-[socket-badge]: https://img.shields.io/badge/Socket.io-black?style=for-the-badge&logo=socket.io&badgeColor=010101
-[ocean-badge]: https://img.shields.io/badge/DigitalOcean-%230167ff.svg?style=for-the-badge&logo=digitalOcean&logoColor=white
+[vercel-badge]: https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white
+[fire-badge]: https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase
 [build]: https://github.com/ink-draw/ink/actions/workflows/ci.yml
 [build-badge]: https://img.shields.io/github/workflow/status/draw-dot-ink/ink/ci?logo=github
 [license-badge]: 
