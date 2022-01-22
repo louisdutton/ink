@@ -6,7 +6,7 @@ import { RouteGuard } from "../components/RouteGuard";
 
 export default function DrawDotInk({ Component, pageProps }: AppProps) {
 	return (
-		<ThemeProvider attribute="class">
+		<ThemeProvider attribute="class" defaultTheme="light">
 			<RouteGuard>
 				<Layout>
 					<Component {...pageProps} />
