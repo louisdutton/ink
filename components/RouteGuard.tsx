@@ -1,11 +1,9 @@
-import { useState, useEffect, PropsWithChildren } from "react";
+import { useState, useEffect, PropsWithChildren, ReactNode } from "react";
 import { useRouter } from "next/router";
 import { auth } from "../lib/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-export { RouteGuard };
-
-function RouteGuard({ children }: any) {
+const RouteGuard = ({ children }: any): JSX.Element => {
 	const router = useRouter();
 	const [user, loading, error] = useAuthState(auth);
 	const [authorized, setAuthorized] = useState(false);
@@ -46,5 +44,7 @@ function RouteGuard({ children }: any) {
 		}
 	}
 
-	return authorized && children;
-}
+	return authorized ? children : <div />;
+};
+
+export default RouteGuard;
