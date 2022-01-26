@@ -65,12 +65,12 @@ export default function SignIn() {
 						<FaGoogle size={24} />
 					</AuthButton>
 				</div>
-				<div className="relative my-4 text-xs tracking-wider uppercase text-neutral-400">
+				{/* <div className="relative my-4 text-xs tracking-wider uppercase text-neutral-400">
 					<hr className="border-neutral-300 dark:border-neutral-500" />
 					<p className="absolute top-0 px-4 font-medium -translate-x-1/2 -translate-y-1/2 bg-white left-1/2 dark:bg-neutral-800 whitespace-nowrap">
 						or continue anonymously
 					</p>
-				</div>
+				</div> */}
 				<Input ref={usernameInput} label="username" />
 			</div>
 			<Button type="submit">Get started</Button>
