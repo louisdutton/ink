@@ -16,9 +16,7 @@ const UserPage = () => {
 
 	// Else load up the page
 	const { id } = router.query;
-	const [value, loading, error] = useDocumentOnce(
-		doc(db, "users", id as string)
-	);
+	const [value, loading, error] = useDocumentOnce(doc(db, "users/" + id));
 	if (!value) return <div />;
 
 	const { username, created: timestamp, badges, xp } = value.data() as Profile;
@@ -60,7 +58,7 @@ const AvatarSection = ({ progress, width = 10, radius = 150 }: AvatarProps) => {
 			<svg style={{ width: radius * 2 + "px", height: radius * 2 + "px" }}>
 				<circle
 					className="text-neutral-300"
-					stroke-width={width}
+					strokeWidth={width}
 					stroke="currentColor"
 					fill="transparent"
 					r={radius - 2 * width}
@@ -69,10 +67,10 @@ const AvatarSection = ({ progress, width = 10, radius = 150 }: AvatarProps) => {
 				/>
 				<circle
 					className="text-black"
-					stroke-width={width}
-					stroke-dasharray={circumference}
-					stroke-dashoffset={circumference - progress * circumference}
-					stroke-linecap="round"
+					strokeWidth={width}
+					strokeDasharray={circumference}
+					strokeDashoffset={circumference - progress * circumference}
+					strokeLinecap="round"
 					stroke="currentColor"
 					fill="transparent"
 					r={radius - 2 * width}

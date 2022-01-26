@@ -1,5 +1,5 @@
 import { User } from "firebase/auth";
-import { doc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import {
 	createContext,
 	ReactNode,
@@ -8,7 +8,6 @@ import {
 	useState,
 } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useDocument } from "react-firebase-hooks/firestore";
 import { auth, db } from "../lib/firebase";
 
 export interface Profile {
@@ -31,13 +30,18 @@ interface Props {
 }
 
 const UserProvider = ({ children }: Props): JSX.Element => {
-	const [user] = useAuthState(auth);
-	if (!user) return <div>{children}</div>;
+	const [user, loading, error] = useAuthState(auth);
+	const [profile, setProfile] = useState<Profile | null>(null);
 
-	const [value, loading, error] = useDocument(doc(db, "users", user.uid));
+	useEffect(() => {
+		if (!profile && user)
+			getDoc(doc(db, "users/" + user.uid)).then((snapshot) =>
+				setProfile(snapshot.data() as Profile)
+			);
+	}, [user]);
 
 	return (
-		<ProfileContext.Provider value={value?.data() as Profile}>
+		<ProfileContext.Provider value={profile}>
 			{children}
 		</ProfileContext.Provider>
 	);
