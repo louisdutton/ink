@@ -70,8 +70,8 @@ export default function SignIn() {
 					<p className="absolute top-0 px-4 font-medium -translate-x-1/2 -translate-y-1/2 bg-white left-1/2 dark:bg-neutral-800 whitespace-nowrap">
 						or continue anonymously
 					</p>
-				</div> */}
-				<Input ref={usernameInput} label="username" />
+				</div>
+				<Input ref={usernameInput} label="username" /> */}
 			</div>
 			<Button type="submit">Get started</Button>
 		</form>
