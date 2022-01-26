@@ -29,14 +29,16 @@ export default function Navigation() {
 				{theme === "dark" ? <FaSun size={24} /> : <FaMoon size={22} />}
 			</IconButton> */}
 			{/* <p className="font-medium text-neutral-600">{username}</p> */}
-			<IconButton className="gap-3 !px-3 font-medium">
-				<AnimatedNumber
-					value={profile?.coins}
-					formatValue={(value: number) => value.toFixed(0)}
-					easing="linear"
-				/>
-				<FaCoins size={24} />
-			</IconButton>
+			<Link href="/shop" passHref>
+				<IconButton className="gap-3 !px-3 font-medium">
+					<AnimatedNumber
+						value={profile?.coins}
+						formatValue={(value: number) => value.toFixed(0)}
+						easing="linear"
+					/>
+					<FaCoins size={24} />
+				</IconButton>
+			</Link>
 			{user && <button onClick={() => handleSignOut()}>sign out</button>}
 			<IconButton>
 				<FaBell size={24} />

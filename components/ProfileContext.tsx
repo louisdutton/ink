@@ -11,10 +11,12 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useDocument } from "react-firebase-hooks/firestore";
 import { auth, db } from "../lib/firebase";
 
-interface Profile {
+export interface Profile {
 	username: string;
 	coins: number;
 	badges: number[];
+	xp: number;
+	created: any;
 }
 
 interface UserData {
